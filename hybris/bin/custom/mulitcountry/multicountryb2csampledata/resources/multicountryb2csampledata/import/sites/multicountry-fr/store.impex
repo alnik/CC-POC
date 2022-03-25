@@ -1,0 +1,22 @@
+#
+# Create the Multicountry store France
+#
+  
+$storePrefix=multicountry-fr
+  
+$productCatalog=apparelMultiCountryProductCatalog
+$net=false
+$storeUid=multicountry-fr
+$checkoutFlowGroup=responsiveCheckoutGroup
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];country(isocode);name[lang=en];checkoutFlowGroup;
+;$storeUid;FR;Apparel MultiCountry France;$checkoutFlowGroup
+
+INSERT_UPDATE BaseStore2DeliveryModeRel;source(uid)[unique=true];target(code)[unique=true]
+;multicountry-fr;premium-net
+;multicountry-fr;standard-net
+;multicountry-fr;premium-gross
+;multicountry-fr;standard-gross
+;multicountry-fr;pickup
+;multicountry-fr;free-standard-shipping

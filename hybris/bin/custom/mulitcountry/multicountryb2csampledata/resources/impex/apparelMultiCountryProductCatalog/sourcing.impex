@@ -1,0 +1,26 @@
+#
+# Associate sourceConfig and AtpFormula to the multicountry stores.
+#
+# Adds a default formula
+INSERT_UPDATE AtpFormula;code[unique=true];availability;allocation;cancellation;increase;reserved;shrinkage;wastage
+;Default_Formula;true;false;true;true;false;false;false
+
+INSERT_UPDATE BaseStore;uid[unique=true];defaultAtpFormula(code);
+;multicountry-it;Default_Formula;
+;multicountry-de;Default_Formula;
+;multicountry-fr;Default_Formula;
+;multicountry-es;Default_Formula;
+;multicountry-uk;Default_Formula;
+;multicountry-be;Default_Formula;
+
+# Adds a default Sourcing Config
+INSERT_UPDATE SourcingConfig;code[unique=true];distanceWeightFactor;allocationWeightFactor;priorityWeightFactor
+;Hybris_OMS_Config;50;30;20
+
+INSERT_UPDATE BaseStore;uid[unique=true];sourcingConfig(code);
+;multicountry-it;Hybris_OMS_Config;
+;multicountry-de;Hybris_OMS_Config;
+;multicountry-fr;Hybris_OMS_Config;
+;multicountry-es;Hybris_OMS_Config;
+;multicountry-uk;Hybris_OMS_Config;
+;multicountry-be;Hybris_OMS_Config;

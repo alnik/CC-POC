@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver" ?>
+
+<widget width="100%" height="100%" xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ca="client/attribute">
+	<vlayout>
+		<div sclass="yw-sitelist-container">
+			<label value="${labels.store}" class="sitelabel" sclass="yw-context-label" id="sitelabel" />
+			<listbox mold="select" rows="1" id="siteList" sclass="yw-sitelist-box"/>
+		</div>
+		<div sclass="yw-catalogversion-container">
+			<label value="${labels.catalogversion}" class="catalogversion-label" sclass="yw-context-label" id="catalogversionlabel" />
+			<listbox mold="select" rows="1" id="catalogVersionList" sclass="yw-catalogversion-list"/>
+		</div>
+		<div sclass="yw-languagelist-container">
+			<label value="${labels.language}" class="language-label" sclass="yw-context-label" id="languagelabel" />
+			<listbox mold="select" rows="1" id="languageList" sclass="yw-languagelist-box"/>
+		</div>
+	</vlayout>
+</widget>

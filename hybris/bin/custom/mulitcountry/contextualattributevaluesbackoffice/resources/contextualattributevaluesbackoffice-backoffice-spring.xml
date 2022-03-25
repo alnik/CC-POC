@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AGs
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:cng="http://www.hybris.com/cockpitng/spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.hybris.com/cockpitng/spring http://www.hybris.com/cockpitng/spring/cng-spring.xsd">
+
+
+	<alias alias="defaultPermissionFacadeStrategy" name="contextualAttributesPlatformPermissionFacadeStrategy"/>
+	<bean id="contextualAttributesPlatformPermissionFacadeStrategy" parent="multicountryPlatformPermissionFacadeStrategy"
+		class="com.hybris.backoffice.cockpitng.dataaccess.facades.permissions.DefaultPlatformPermissionFacadeStrategy">
+		<property name="permissionAdvisors">
+			<list merge="true">
+				<bean class="de.hybris.contextualattributevaluesbackoffice.advisors.ContextualAttributeValuePermissionAdvisor">
+					<property name="userService" ref="userService" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="contextualEditorAreaSectionRenderer"
+		  class="de.hybris.contextualattributevaluesbackoffice.editorarea.ContextualEditorAreaSectionRenderer"
+		  parent="defaultEditorAreaSectionRenderer" scope="prototype">
+		<property name="objectFacade" ref="objectFacade"/>
+	</bean>
+
+
+	<cng:map-extender bean="editAvailabilityProviderFactory" property="editAvailabilityProviders">
+		<cng:put key-type="java.lang.Class"
+				 value-type="com.hybris.cockpitng.widgets.editorarea.renderer.EditAvailabilityProvider">
+			<entry key="de.hybris.platform.contextualattributevalues.model.ContextualAttributeValueModel"
+				   value-ref="contextualAttributeValueEditAvailabilityProvider"/>
+		</cng:put>
+	</cng:map-extender>
+
+	<bean id="contextualAttributeValueEditAvailabilityProvider"
+		  class="de.hybris.contextualattributevaluesbackoffice.editors.ContextualAttributeValueEditAvailabilityProvider"/>
+
+	<bean id="contextualBackofficeEditorAreaLogicHandler" parent="defaultBackofficeEditorAreaLogicHandler"
+		  class="de.hybris.contextualattributevaluesbackoffice.editorarea.ContextualBackofficeEditorAreaLogicHandler"/>
+
+	<alias name="contextualAttributeValuesSolrSearchStrategy" alias="solrSearchStrategy"/>
+	<bean id="contextualAttributeValuesSolrSearchStrategy" class="de.hybris.contextualattributevaluesbackoffice.dataaccess.impl.ContextualAttributeValuesSolrSearchStrategy"
+		  parent="defaultSolrSearchStrategy" />
+
+
+	<bean id="contextualAttributesCompareViewSectionRenderer"
+		  class="com.hybris.cockpitng.widgets.compare.renderer.ContextualAttributesCompareViewSectionRenderer"
+		  parent="defaultCompareViewSectionRenderer">
+		<property name="attributeRenderer" ref="contextualAttributeCompareViewAttributeRenderer"/>
+		<property name="contextualAttributesDao" ref="contextualAttributesDao"/>
+	</bean>
+
+	<bean id="contextualAttributeCompareViewAttributeRenderer"
+		  class="com.hybris.cockpitng.widgets.compare.renderer.ContextualAttributeCompareViewAttributeRenderer"
+		  parent="defaultCompareViewAttributeRenderer">
+	</bean>
+
+
+	<alias name="contextualFieldQueryPopupRenderer" alias="fieldQueryPopupRenderer"/>
+	<bean id="contextualFieldQueryPopupRenderer" parent="defaultFieldQueryPopupRenderer"
+		  class="de.hybris.contextualattributevaluesbackoffice.widgets.fulltextsearch.renderer.impl.ContextualFieldQueryPopupRenderer">
+	</bean>
+
+	<alias name="contextualFieldQueryFieldRenderer" alias="fieldQueryFieldRenderer"/>
+	<bean id="contextualFieldQueryFieldRenderer"
+		  class="de.hybris.contextualattributevaluesbackoffice.widgets.fulltextsearch.renderer.impl.ContextualFieldQueryFieldRenderer" parent="defaultFieldQueryFieldRenderer">
+		<property name="contextualFulltextSearchStrategy" ref="contextualAttributeValuesSolrSearchStrategy" />
+		<property name="contextualAttributesDao" ref="contextualAttributesDao" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<cng:map-extender bean="editorRegistry" property="defaultEditorMapping">
+		<cng:put key-type="java.lang.String" value-type="java.lang.String">
+			<entry key="^ContextualLocalizedSimple\((.*)\)$" value="com.hybris.cockpitng.editor.contextuallocalizedsimpleeditor"/>
+			<entry key="^ContextualSimple\((.*)\)$" value="com.hybris.cockpitng.editor.contextualsimpleeditor"/>
+		</cng:put>
+	</cng:map-extender>
+
+
+	<alias name="contextualBackofficeFacetSearchQueryFilterQueriesPopulator"
+		   alias="backofficeFacetSearchQueryFilterQueriesPopulator"/>
+	<bean id="contextualBackofficeFacetSearchQueryFilterQueriesPopulator"
+		  class="de.hybris.contextualattributevaluesbackoffice.solrfacetsearch.populators.ContextualBackofficeFacetSearchQueryFilterQueriesPopulator"
+		  parent="facetSearchQueryFilterQueriesPopulator">
+		<property name="fieldNamePostProcessor" ref="backofficeFieldNamePostProcessor"/>
+		<property name="conditionValueConverterMap">
+			<map key-type="java.lang.String">
+				<entry key="java.util.Date">
+					<bean class="com.hybris.backoffice.solrsearch.populators.conditionvalueconverters.DateConditionValueConverter"/>
+				</entry>
+				<entry key="de.hybris.contextualattributevaluesbackoffice.solrfacetsearch.ContextualConditionValue">
+					<bean class="de.hybris.contextualattributevaluesbackoffice.solrfacetsearch.converters.ContextualConditionValueConverter" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+
+	<alias name="contextualSearchQueryConditionsConverter" alias="searchQueryConditionsConverter"/>
+	<bean id="contextualSearchQueryConditionsConverter"
+		  class="de.hybris.contextualattributevaluesbackoffice.solrfacetsearch.converters.ContextualSearchQueryConditionsConverter"/>
+
+
+	<alias alias="containsConditionDecorator" name="contextualContainsConditionDecorator"/>
+	<bean id="contextualContainsConditionDecorator" parent="defaultContainsConditionDecorator"
+		  class="de.hybris.contextualattributevaluesbackoffice.solrfacetsearch.decorators.impl.ContextualContainsConditionDecorator" />
+
+
+</beans>

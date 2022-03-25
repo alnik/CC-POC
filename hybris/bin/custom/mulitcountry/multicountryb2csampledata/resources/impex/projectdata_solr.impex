@@ -1,0 +1,283 @@
+#
+# Multicountry Sampledata
+#
+# Add additional sample solr index configuration
+#
+
+$prefix=apparelMultiCountry
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id[default=$productCatalog]),version[default='Online'])[default=$productCatalog:Online,virtual=true]
+$indexedType=apparelMultiCountryProductType
+$solrIndexedType=solrIndexedType(identifier)[unique=true]
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Apparel MultiCountry Solr Index
+$indexLanguages=en,de,fr
+$indexCurrencies=EUR,GBP
+
+# Create the solr server configuration
+INSERT_UPDATE  SolrServerConfig ; name[unique=true] ; mode(code) ; embeddedMaster ; username   ; password  ; indexingUsername   ; indexingPassword
+                                ; $serverConfigName ; standalone ; false ; solrclient ; client123 ; solrindexingclient ; indexingclient123
+
+INSERT_UPDATE SolrEndpointUrl ; solrServerConfig(name)[unique=true] ; url[unique=true]           ; master[unique=true,default=false]
+                              ; $serverConfigName                   ; "https://localhost:8983/solr" ; true
+
+# Create the solr indexer configuration
+INSERT_UPDATE SolrIndexConfig ; name[unique=true] ; batchSize ; numberOfThreads ; indexMode(code) ;  
+                              ; $indexConfigName  ; 100       ; 1               ; TWO_PHASE       ;  
+
+# Create the faceted search configuration
+INSERT_UPDATE SolrSearchConfig ; description[unique=true] ; pageSize ; legacyMode
+                               ; $searchConfigName        ; 20       ; false     
+
+# Declare the indexed type Product
+INSERT_UPDATE SolrIndexedType ; identifier[unique=true] ; type(code) ; variant
+                              ; $indexedType            ; Product    ; false  ;  
+
+INSERT_UPDATE SolrFacetSearchConfig ; name[unique=true]      ; description                   ; indexNamePrefix ; languages(isocode) ; currencies(isocode) ; solrServerConfig(name) ; solrSearchConfig(description) ; solrIndexConfig(name) ; solrIndexedTypes(identifier) ; enabledLanguageFallbackMechanism ; $catalogVersions                             
+                                    ; $facetSearchConfigName ; $facetSearchConfigDescription ; $prefix         ; $indexLanguages    ; $indexCurrencies    ; $serverConfigName      ; $searchConfigName             ; $indexConfigName      ; $indexedType                 ; true                             ; $productCatalog:Online,$productCatalog:Staged
+
+# Define the available sorts        
+INSERT_UPDATE SolrSort ; &sortRefID ; indexedType(identifier)[unique=true] ; code[unique=true] ; useBoost
+                       ; sortRef1   ; $indexedType                         ; relevance         ; true    
+                       ; sortRef2   ; $indexedType                         ; topRated          ; false   
+                       ; sortRef3   ; $indexedType                         ; name-asc          ; false   
+                       ; sortRef4   ; $indexedType                         ; name-desc         ; false   
+                       ; sortRef5   ; $indexedType                         ; price-asc         ; false   
+                       ; sortRef6   ; $indexedType                         ; price-desc        ; false   
+
+# solrValueRanges(&rangeValueRefID)
+# Define price range set
+INSERT_UPDATE SolrValueRangeSet ; name[unique=true]                  ; qualifier         ; type   ;                                                                                                                                                                                                       
+                                ; apparelMultiCountryPriceRangeGBP   ; GBP               ; double ; rangeRefGBP1,rangeRefGBP2,rangeRefGBP3,rangeRefGBP4,rangeRefGBP5,rangeRefGBP6,rangeRefGBP7,rangeRefGBP8,rangeRefGBP9,rangeRefGBP10,rangeRefGBP11,rangeRefGBP12,rangeRefGBP13                          
+                                ; apparelMultiCountryPriceRangeEUR   ; EUR               ; double ; rangeRefEUR1,rangeRefEUR2,rangeRefEUR3,rangeRefEUR4,rangeRefEUR5,rangeRefEUR6,rangeRefEUR7,rangeRefEUR8,rangeRefEUR9,rangeRefEUR10,rangeRefEUR11,rangeRefEUR12,rangeRefEUR13                          
+
+                                ; apparelMultiCountryPriceUkRangeGBP ; pricegroup-uk_GBP ; double ; rangeRefUkGBP1,rangeRefUkGBP2,rangeRefUkGBP3,rangeRefUkGBP4,rangeRefUkGBP5,rangeRefUkGBP6,rangeRefUkGBP7,rangeRefUkGBP8,rangeRefUkGBP9,rangeRefUkGBP10,rangeRefUkGBP11,rangeRefUkGBP12,rangeRefUkGBP13
+                                ; apparelMultiCountryPriceDeRangeEUR ; pricegroup-de_EUR ; double ; rangeRefDeEUR1,rangeRefDeEUR2,rangeRefDeEUR3,rangeRefDeEUR4,rangeRefDeEUR5,rangeRefDeEUR6,rangeRefDeEUR7,rangeRefDeEUR8,rangeRefDeEUR9,rangeRefDeEUR10,rangeRefDeEUR11,rangeRefDeEUR12,rangeRefDeEUR13
+                                ; apparelMultiCountryPriceFrRangeEUR ; pricegroup-fr_EUR ; double ; rangeRefFrEUR1,rangeRefFrEUR2,rangeRefFrEUR3,rangeRefFrEUR4,rangeRefFrEUR5,rangeRefFrEUR6,rangeRefFrEUR7,rangeRefFrEUR8,rangeRefFrEUR9,rangeRefFrEUR10,rangeRefFrEUR11,rangeRefFrEUR12,rangeRefFrEUR13
+                                ; apparelMultiCountryPriceBeRangeEUR ; pricegroup-be_EUR ; double ; rangeRefBeEUR1,rangeRefBeEUR2,rangeRefBeEUR3,rangeRefBeEUR4,rangeRefBeEUR5,rangeRefBeEUR6,rangeRefBeEUR7,rangeRefBeEUR8,rangeRefBeEUR9,rangeRefBeEUR10,rangeRefBeEUR11,rangeRefBeEUR12,rangeRefBeEUR13
+                                ; apparelMultiCountryPriceEsRangeEUR ; pricegroup-es_EUR ; double ; rangeRefEsEUR1,rangeRefEsEUR2,rangeRefEsEUR3,rangeRefEsEUR4,rangeRefEsEUR5,rangeRefEsEUR6,rangeRefEsEUR7,rangeRefEsEUR8,rangeRefEsEUR9,rangeRefEsEUR10,rangeRefEsEUR11,rangeRefEsEUR12,rangeRefEsEUR13
+                                ; apparelMultiCountryPriceItRangeEUR ; pricegroup-it_EUR ; double ; rangeRefItEUR1,rangeRefItEUR2,rangeRefItEUR3,rangeRefItEUR4,rangeRefItEUR5,rangeRefItEUR6,rangeRefItEUR7,rangeRefItEUR8,rangeRefItEUR9,rangeRefItEUR10,rangeRefItEUR11,rangeRefItEUR12,rangeRefItEUR13
+
+
+# Define price ranges           
+INSERT_UPDATE SolrValueRange ; &rangeValueRefID ; solrValueRangeSet(name)[unique=true] ; name[unique=true] ; from ; to    
+                             ; rangeRefGBP1     ; apparelMultiCountryPriceRangeGBP     ; £0-£19.99         ; 0    ; 19.99 
+                             ; rangeRefGBP2     ; apparelMultiCountryPriceRangeGBP     ; £20-£49.99        ; 20   ; 49.99 
+                             ; rangeRefGBP3     ; apparelMultiCountryPriceRangeGBP     ; £50-£99.99        ; 50   ; 99.99 
+                             ; rangeRefGBP4     ; apparelMultiCountryPriceRangeGBP     ; £100-£199.99      ; 100  ; 199.99
+                             ; rangeRefGBP5     ; apparelMultiCountryPriceRangeGBP     ; £200-£299.99      ; 200  ; 299.99
+                             ; rangeRefGBP6     ; apparelMultiCountryPriceRangeGBP     ; £300-£399.99      ; 300  ; 399.99
+                             ; rangeRefGBP7     ; apparelMultiCountryPriceRangeGBP     ; £400-£499.99      ; 400  ; 499.99
+                             ; rangeRefGBP8     ; apparelMultiCountryPriceRangeGBP     ; £500-£599.99      ; 500  ; 599.99
+                             ; rangeRefGBP9     ; apparelMultiCountryPriceRangeGBP     ; £600-£699.99      ; 600  ; 699.99
+                             ; rangeRefGBP10    ; apparelMultiCountryPriceRangeGBP     ; £700-£799.99      ; 700  ; 799.99
+                             ; rangeRefGBP11    ; apparelMultiCountryPriceRangeGBP     ; £800-£899.99      ; 800  ; 899.99
+                             ; rangeRefGBP12    ; apparelMultiCountryPriceRangeGBP     ; £900-£999.99      ; 900  ; 999.99
+                             ; rangeRefGBP13    ; apparelMultiCountryPriceRangeGBP     ; £1,000-£100,000   ; 1000 ; 100000
+
+                             ; rangeRefEUR1     ; apparelMultiCountryPriceRangeEUR     ; €0-€19.99         ; 0    ; 19.99 
+                             ; rangeRefEUR2     ; apparelMultiCountryPriceRangeEUR     ; €20-€49.99        ; 20   ; 49.99 
+                             ; rangeRefEUR3     ; apparelMultiCountryPriceRangeEUR     ; €50-€99.99        ; 50   ; 99.99 
+                             ; rangeRefEUR4     ; apparelMultiCountryPriceRangeEUR     ; €100-€199.99      ; 100  ; 199.99
+                             ; rangeRefEUR5     ; apparelMultiCountryPriceRangeEUR     ; €200-€299.99      ; 200  ; 299.99
+                             ; rangeRefEUR6     ; apparelMultiCountryPriceRangeEUR     ; €300-€399.99      ; 300  ; 399.99
+                             ; rangeRefEUR7     ; apparelMultiCountryPriceRangeEUR     ; €400-€499.99      ; 400  ; 499.99
+                             ; rangeRefEUR8     ; apparelMultiCountryPriceRangeEUR     ; €500-€599.99      ; 500  ; 599.99
+                             ; rangeRefEUR9     ; apparelMultiCountryPriceRangeEUR     ; €600-€699.99      ; 600  ; 699.99
+                             ; rangeRefEUR10    ; apparelMultiCountryPriceRangeEUR     ; €700-€799.99      ; 700  ; 799.99
+                             ; rangeRefEUR11    ; apparelMultiCountryPriceRangeEUR     ; €800-€899.99      ; 800  ; 899.99
+                             ; rangeRefEUR12    ; apparelMultiCountryPriceRangeEUR     ; €900-€999.99      ; 900  ; 999.99
+                             ; rangeRefEUR13    ; apparelMultiCountryPriceRangeEUR     ; €1,000-€100,000   ; 1000 ; 100000
+
+                             ; rangeRefUkGBP1   ; apparelMultiCountryPriceUkRangeGBP   ; £0-£19.99         ; 0    ; 19.99 
+                             ; rangeRefUkGBP2   ; apparelMultiCountryPriceUkRangeGBP   ; £20-£49.99        ; 20   ; 49.99 
+                             ; rangeRefUkGBP3   ; apparelMultiCountryPriceUkRangeGBP   ; £50-£99.99        ; 50   ; 99.99 
+                             ; rangeRefUkGBP4   ; apparelMultiCountryPriceUkRangeGBP   ; £100-£199.99      ; 100  ; 199.99
+                             ; rangeRefUkGBP5   ; apparelMultiCountryPriceUkRangeGBP   ; £200-£299.99      ; 200  ; 299.99
+                             ; rangeRefUkGBP6   ; apparelMultiCountryPriceUkRangeGBP   ; £300-£399.99      ; 300  ; 399.99
+                             ; rangeRefUkGBP7   ; apparelMultiCountryPriceUkRangeGBP   ; £400-£499.99      ; 400  ; 499.99
+                             ; rangeRefUkGBP8   ; apparelMultiCountryPriceUkRangeGBP   ; £500-£599.99      ; 500  ; 599.99
+                             ; rangeRefUkGBP9   ; apparelMultiCountryPriceUkRangeGBP   ; £600-£699.99      ; 600  ; 699.99
+                             ; rangeRefUkGBP10  ; apparelMultiCountryPriceUkRangeGBP   ; £700-£799.99      ; 700  ; 799.99
+                             ; rangeRefUkGBP11  ; apparelMultiCountryPriceUkRangeGBP   ; £800-£899.99      ; 800  ; 899.99
+                             ; rangeRefUkGBP12  ; apparelMultiCountryPriceUkRangeGBP   ; £900-£999.99      ; 900  ; 999.99
+                             ; rangeRefUkGBP13  ; apparelMultiCountryPriceUkRangeGBP   ; £1,000-£100,000   ; 1000 ; 100000
+
+                             ; rangeRefDeEUR1   ; apparelMultiCountryPriceDeRangeEUR   ; €0-€19.99         ; 0    ; 19.99 
+                             ; rangeRefDeEUR2   ; apparelMultiCountryPriceDeRangeEUR   ; €20-€49.99        ; 20   ; 49.99 
+                             ; rangeRefDeEUR3   ; apparelMultiCountryPriceDeRangeEUR   ; €50-€99.99        ; 50   ; 99.99 
+                             ; rangeRefDeEUR4   ; apparelMultiCountryPriceDeRangeEUR   ; €100-€199.99      ; 100  ; 199.99
+                             ; rangeRefDeEUR5   ; apparelMultiCountryPriceDeRangeEUR   ; €200-€299.99      ; 200  ; 299.99
+                             ; rangeRefDeEUR6   ; apparelMultiCountryPriceDeRangeEUR   ; €300-€399.99      ; 300  ; 399.99
+                             ; rangeRefDeEUR7   ; apparelMultiCountryPriceDeRangeEUR   ; €400-€499.99      ; 400  ; 499.99
+                             ; rangeRefDeEUR8   ; apparelMultiCountryPriceDeRangeEUR   ; €500-€599.99      ; 500  ; 599.99
+                             ; rangeRefDeEUR9   ; apparelMultiCountryPriceDeRangeEUR   ; €600-€699.99      ; 600  ; 699.99
+                             ; rangeRefDeEUR10  ; apparelMultiCountryPriceDeRangeEUR   ; €700-€799.99      ; 700  ; 799.99
+                             ; rangeRefDeEUR11  ; apparelMultiCountryPriceDeRangeEUR   ; €800-€899.99      ; 800  ; 899.99
+                             ; rangeRefDeEUR12  ; apparelMultiCountryPriceDeRangeEUR   ; €900-€999.99      ; 900  ; 999.99
+                             ; rangeRefDeEUR13  ; apparelMultiCountryPriceDeRangeEUR   ; €1,000-€100,000   ; 1000 ; 100000
+
+# country specific price ranges for France
+                             ; rangeRefFrEUR1   ; apparelMultiCountryPriceFrRangeEUR   ; €0-€9.69          ; 0    ; 9.69  
+                             ; rangeRefFrEUR2   ; apparelMultiCountryPriceFrRangeEUR   ; €9.7-€49.99       ; 9.7  ; 49.99 
+                             ; rangeRefFrEUR3   ; apparelMultiCountryPriceFrRangeEUR   ; €50-€99.99        ; 50   ; 99.99 
+                             ; rangeRefFrEUR4   ; apparelMultiCountryPriceFrRangeEUR   ; €100-€199.99      ; 100  ; 199.99
+                             ; rangeRefFrEUR5   ; apparelMultiCountryPriceFrRangeEUR   ; €200-€299.99      ; 200  ; 299.99
+                             ; rangeRefFrEUR6   ; apparelMultiCountryPriceFrRangeEUR   ; €300-€399.99      ; 300  ; 399.99
+                             ; rangeRefFrEUR7   ; apparelMultiCountryPriceFrRangeEUR   ; €400-€499.99      ; 400  ; 499.99
+                             ; rangeRefFrEUR8   ; apparelMultiCountryPriceFrRangeEUR   ; €500-€599.99      ; 500  ; 599.99
+                             ; rangeRefFrEUR9   ; apparelMultiCountryPriceFrRangeEUR   ; €600-€699.99      ; 600  ; 699.99
+                             ; rangeRefFrEUR10  ; apparelMultiCountryPriceFrRangeEUR   ; €700-€799.99      ; 700  ; 799.99
+                             ; rangeRefFrEUR11  ; apparelMultiCountryPriceFrRangeEUR   ; €800-€899.99      ; 800  ; 899.99
+                             ; rangeRefFrEUR12  ; apparelMultiCountryPriceFrRangeEUR   ; €900-€999.99      ; 900  ; 999.99
+                             ; rangeRefFrEUR13  ; apparelMultiCountryPriceFrRangeEUR   ; €1,000-€100,000   ; 1000 ; 100000
+
+                             ; rangeRefBeEUR1   ; apparelMultiCountryPriceBeRangeEUR   ; €0-€19.99         ; 0    ; 19.99 
+                             ; rangeRefBeEUR2   ; apparelMultiCountryPriceBeRangeEUR   ; €20-€49.99        ; 20   ; 49.99 
+                             ; rangeRefBeEUR3   ; apparelMultiCountryPriceBeRangeEUR   ; €50-€99.99        ; 50   ; 99.99 
+                             ; rangeRefBeEUR4   ; apparelMultiCountryPriceBeRangeEUR   ; €100-€199.99      ; 100  ; 199.99
+                             ; rangeRefBeEUR5   ; apparelMultiCountryPriceBeRangeEUR   ; €200-€299.99      ; 200  ; 299.99
+                             ; rangeRefBeEUR6   ; apparelMultiCountryPriceBeRangeEUR   ; €300-€399.99      ; 300  ; 399.99
+                             ; rangeRefBeEUR7   ; apparelMultiCountryPriceBeRangeEUR   ; €400-€499.99      ; 400  ; 499.99
+                             ; rangeRefBeEUR8   ; apparelMultiCountryPriceBeRangeEUR   ; €500-€599.99      ; 500  ; 599.99
+                             ; rangeRefBeEUR9   ; apparelMultiCountryPriceBeRangeEUR   ; €600-€699.99      ; 600  ; 699.99
+                             ; rangeRefBeEUR10  ; apparelMultiCountryPriceBeRangeEUR   ; €700-€799.99      ; 700  ; 799.99
+                             ; rangeRefBeEUR11  ; apparelMultiCountryPriceBeRangeEUR   ; €800-€899.99      ; 800  ; 899.99
+                             ; rangeRefBeEUR12  ; apparelMultiCountryPriceBeRangeEUR   ; €900-€999.99      ; 900  ; 999.99
+                             ; rangeRefBeEUR13  ; apparelMultiCountryPriceBeRangeEUR   ; €1,000-€100,000   ; 1000 ; 100000
+
+                             ; rangeRefEsEUR1   ; apparelMultiCountryPriceEsRangeEUR   ; €0-€19.99         ; 0    ; 19.99 
+                             ; rangeRefEsEUR2   ; apparelMultiCountryPriceEsRangeEUR   ; €20-€49.99        ; 20   ; 49.99 
+                             ; rangeRefEsEUR3   ; apparelMultiCountryPriceEsRangeEUR   ; €50-€99.99        ; 50   ; 99.99 
+                             ; rangeRefEsEUR4   ; apparelMultiCountryPriceEsRangeEUR   ; €100-€199.99      ; 100  ; 199.99
+                             ; rangeRefEsEUR5   ; apparelMultiCountryPriceEsRangeEUR   ; €200-€299.99      ; 200  ; 299.99
+                             ; rangeRefEsEUR6   ; apparelMultiCountryPriceEsRangeEUR   ; €300-€399.99      ; 300  ; 399.99
+                             ; rangeRefEsEUR7   ; apparelMultiCountryPriceEsRangeEUR   ; €400-€499.99      ; 400  ; 499.99
+                             ; rangeRefEsEUR8   ; apparelMultiCountryPriceEsRangeEUR   ; €500-€599.99      ; 500  ; 599.99
+                             ; rangeRefEsEUR9   ; apparelMultiCountryPriceEsRangeEUR   ; €600-€699.99      ; 600  ; 699.99
+                             ; rangeRefEsEUR10  ; apparelMultiCountryPriceEsRangeEUR   ; €700-€799.99      ; 700  ; 799.99
+                             ; rangeRefEsEUR11  ; apparelMultiCountryPriceEsRangeEUR   ; €800-€899.99      ; 800  ; 899.99
+                             ; rangeRefEsEUR12  ; apparelMultiCountryPriceEsRangeEUR   ; €900-€999.99      ; 900  ; 999.99
+                             ; rangeRefEsEUR13  ; apparelMultiCountryPriceEsRangeEUR   ; €1,000-€100,000   ; 1000 ; 100000
+
+                             ; rangeRefItEUR1   ; apparelMultiCountryPriceItRangeEUR   ; €0-€19.99         ; 0    ; 19.99 
+                             ; rangeRefItEUR2   ; apparelMultiCountryPriceItRangeEUR   ; €20-€49.99        ; 20   ; 49.99 
+                             ; rangeRefItEUR3   ; apparelMultiCountryPriceItRangeEUR   ; €50-€99.99        ; 50   ; 99.99 
+                             ; rangeRefItEUR4   ; apparelMultiCountryPriceItRangeEUR   ; €100-€199.99      ; 100  ; 199.99
+                             ; rangeRefItEUR5   ; apparelMultiCountryPriceItRangeEUR   ; €200-€299.99      ; 200  ; 299.99
+                             ; rangeRefItEUR6   ; apparelMultiCountryPriceItRangeEUR   ; €300-€399.99      ; 300  ; 399.99
+                             ; rangeRefItEUR7   ; apparelMultiCountryPriceItRangeEUR   ; €400-€499.99      ; 400  ; 499.99
+                             ; rangeRefItEUR8   ; apparelMultiCountryPriceItRangeEUR   ; €500-€599.99      ; 500  ; 599.99
+                             ; rangeRefItEUR9   ; apparelMultiCountryPriceItRangeEUR   ; €600-€699.99      ; 600  ; 699.99
+                             ; rangeRefItEUR10  ; apparelMultiCountryPriceItRangeEUR   ; €700-€799.99      ; 700  ; 799.99
+                             ; rangeRefItEUR11  ; apparelMultiCountryPriceItRangeEUR   ; €800-€899.99      ; 800  ; 899.99
+                             ; rangeRefItEUR12  ; apparelMultiCountryPriceItRangeEUR   ; €900-€999.99      ; 900  ; 999.99
+                             ; rangeRefItEUR13  ; apparelMultiCountryPriceItRangeEUR   ; €1,000-€100,000   ; 1000 ; 100000
+
+INSERT_UPDATE SolrIndexedType ; identifier[unique=true] ; sorts(&sortRefID)                                    
+                              ; $indexedType            ; sortRef1,sortRef2,sortRef3,sortRef4,sortRef5,sortRef6
+
+# Non-facet properties        
+INSERT_UPDATE SolrIndexedProperty ; $solrIndexedType ; name[unique=true]      ; type(code) ; sortableType(code) ; currency[default=false] ; localized[default=false] ; multiValue[default=false] ; useForSpellchecking[default=false] ; useForAutocomplete[default=false] ; fieldValueProvider                     ; valueProviderParameter
+                                  ; $indexedType     ; priceValue             ; double     ;                    ; true                    ;                          ;                           ;                                    ;                                   ; upgProductPriceValueResolver           ;                       
+                                  ; $indexedType     ; itemtype               ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ;                                        
+                                  ; $indexedType     ; code                   ; string     ;                    ;                         ;                          ;                           ; true                               ; true                              ;                                        
+                                  ; $indexedType     ; name                   ; text       ; sortabletext       ;                         ; true                     ;                           ; true                               ; true                              ;                                        
+                                  ; $indexedType     ; description            ; text       ;                    ;                         ; true                     ;                           ;                                    ;                                   ;                                        
+                                  ; $indexedType     ; summary                ; text       ;                    ;                         ; true                     ;                           ;                                    ;                                   ;                                        
+                                  ; $indexedType     ; manufacturerName       ; text       ;                    ;                         ;                          ;                           ; true                               ; true                              ;                                        
+                                  ; $indexedType     ; manufacturerAID        ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ;                                        
+                                  ; $indexedType     ; ean                    ; string     ;                    ;                         ;                          ;                           ; true                               ; true                              ;                                        
+                                  ; $indexedType     ; keywords               ; text       ;                    ;                         ; true                     ;                           ; true                               ; true                              ; productKeywordsValueProvider           
+                                  ; $indexedType     ; reviewAvgRating        ; double     ;                    ;                         ; true                     ;                           ;                                    ;                                   ; productReviewAverageRatingValueProvider
+                                  ; $indexedType     ; img-515Wx515H          ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; image515ValueProvider                  
+                                  ; $indexedType     ; img-300Wx300H          ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; image300ValueProvider                  
+                                  ; $indexedType     ; img-96Wx96H            ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; image96ValueProvider                   
+                                  ; $indexedType     ; img-65Wx65H            ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; image65ValueProvider                   
+                                  ; $indexedType     ; img-30Wx30H            ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; image30ValueProvider                   
+                                  ; $indexedType     ; url                    ; string     ;                    ;                         ; true                     ;                           ;                                    ;                                   ; productUrlValueProvider                
+                                  ; $indexedType     ; primaryPromotionCode   ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; promotionCodeValueProvider             
+                                  ; $indexedType     ; primaryPromotionBanner ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; promotionImageValueProvider            
+                                  ; $indexedType     ; stockLevelStatus       ; string     ;                    ;                         ;                          ;                           ;                                    ;                                   ; productStockLevelStatusValueProvider   
+                                  ; $indexedType     ; inStockFlag            ; boolean    ;                    ;                         ;                          ;                           ;                                    ;                                   ; productInStockFlagValueProvider        ;                       
+                                  ; $indexedType     ; pickupAvailableFlag    ; boolean    ;                    ;                         ;                          ;                           ;                                    ;                                   ; productPickupAvailabilityValueProvider 
+
+
+# Category fields                 
+INSERT_UPDATE SolrIndexedProperty ; solrIndexedType(identifier)[unique=true] ; name[unique=true] ; type(code) ; localized[default=false] ; multiValue[default=true] ; categoryField[default=true] ; useForSpellchecking[default=false] ; useForAutocomplete[default=false] ; fieldValueProvider                                                    
+                                  ; $indexedType                             ; categoryName      ; text       ; true                     ;                          ;                             ; true                               ; true                              ; apparelMultiCountryCategoryNameValueProvider          
+                                  ; $indexedType                             ; brandName         ; text       ; true                     ;                          ;                             ;                                    ;                                   ; apparelMultiCountryBrandCategoryNameValueProvider     
+                                  ; $indexedType                             ; collectionName    ; text       ; true                     ;                          ;                             ;                                    ;                                   ; apparelMultiCountryCollectionCategoryNameValueProvider
+
+# Category facets                 
+INSERT_UPDATE SolrIndexedProperty ; solrIndexedType(identifier)[unique=true] ; name[unique=true] ; type(code) ; multiValue[default=true] ; facet[default=true] ; facetType(code) ; facetSort(code) ; priority ; visible ; categoryField[default=true] ; fieldValueProvider                                     ; facetDisplayNameProvider         ; topValuesProvider       ;categoryCatalogDependent    
+                                  ; $indexedType                             ; allCategories     ; string     ;                          ;                     ; Refine          ; Alpha           ; -9999    ; false   ;                             ; apparelMultiCountryAllCategoryCodeValueResolver        ; categoryFacetDisplayNameProvider                                 ;                         ;true
+                                  ; $indexedType                             ; categoryPath      ; string     ;                          ;                     ; Refine          ; Alpha           ; -9999    ; false   ; false                       ; apparelMultiCountryCategoryPathValueResolver           ;                                  ;                         ;true
+                                  ; $indexedType                             ; category          ; string     ;                          ;                     ; Refine          ; Alpha           ; 6000     ; true    ;                             ; apparelMultiCountryCategoryCodeValueResolver           ; categoryFacetDisplayNameProvider ; defaultTopValuesProvider;true
+                                  ; $indexedType                             ; collection        ; string     ;                          ;                     ; Refine          ; Alpha           ; 5500     ; true    ;                             ; apparelMultiCountryCollectionCategoryCodeValueResolver ; categoryFacetDisplayNameProvider ; defaultTopValuesProvider;true
+                                  ; $indexedType                             ; brand             ; string     ;                          ;                     ; Refine          ; Alpha           ; 5000     ; true    ;                             ; apparelMultiCountryBrandCategoryCodeValueResolver      ; categoryFacetDisplayNameProvider ; defaultTopValuesProvider;true
+                                  ; $indexedType                             ; gender            ; string     ;                          ;                     ; Refine          ; Alpha           ; 4500     ; true    ; false                       ; genderValueProvider                                    ; genderFacetDisplayNameProvider   ;                         ;
+
+# Other facet properties          
+INSERT_UPDATE SolrIndexedProperty ; $solrIndexedType ; name[unique=true] ; type(code) ; sortableType(code) ; currency[default=false] ; localized[default=false] ; multiValue[default=false] ; facet[default=false] ; facetType(code) ; facetSort(code) ; priority ; visible[default=false] ; useForSpellchecking[default=false] ; useForAutocomplete[default=false] ; fieldValueProvider                      ; facetDisplayNameProvider                      ; customFacetSortProvider       ; rangeSets(name)                                                                                                                                                                                                                                                                    
+                                  ; $indexedType     ; price             ; double     ;                    ; true                    ;                          ;                           ; true                 ; MultiSelectOr   ; Alpha           ; 4000     ; true                   ;                                    ;                                   ; upgProductPriceValueResolver            ;                                               ;                               ; apparelMultiCountryPriceRangeGBP,apparelMultiCountryPriceRangeEUR,apparelMultiCountryPriceUkRangeGBP,apparelMultiCountryPriceDeRangeEUR,apparelMultiCountryPriceFrRangeEUR,apparelMultiCountryPriceBeRangeEUR,apparelMultiCountryPriceEsRangeEUR,apparelMultiCountryPriceItRangeEUR
+                                  ; $indexedType     ; style             ; string     ;                    ;                         ; true                     ;                           ;                      ; MultiSelectOr   ; Alpha           ; -1       ; false                  ;                                    ;                                   ; optionalModelPropertyFieldValueProvider ;                                               ;                               ;                                                                                                                                                                                                                                                                                    
+                                  ; $indexedType     ; swatchColors      ; string     ;                    ;                         ;                          ; true                      ;                      ; MultiSelectOr   ; Alpha           ; 2500     ; true                   ;                                    ;                                   ; colorFacetValueProvider                 ; colorFacetDisplayNameProvider                 ;                               ;                                                                                                                                                                                                                                                                                    
+                                  ; $indexedType     ; size              ; string     ;                    ;                         ; true                     ;                           ;                      ; MultiSelectOr   ; Custom          ; 2000     ; true                   ;                                    ;                                   ; optionalModelPropertyFieldValueProvider ;                                               ; sizeAttributeSortProvider     ;                                                                                                                                                                                                                                                                                    
+                                  ; $indexedType     ; allPromotions     ; string     ;                    ; false                   ;                          ; true                      ;                      ; MultiSelectOr   ; Alpha           ; 0        ; false                  ;                                    ;                                   ; promotionCodeValueProvider              ; promotionFacetDisplayNameProvider             ;                               ;                                                                                                                                                                                                                                                                                    
+                                  ; $indexedType     ; availableInStores ; string     ;                    ;                         ;                          ; true                      ;                      ; MultiSelectOr   ; Custom          ; 10000    ; true                   ;                                    ;                                   ; productStoreStockValueProvider          ; apparelPointOfServiceFacetDisplayNameProvider ; distanceAttributeSortProvider ;                                                                                                                                                                                                                                                                                    
+                                  ; $indexedType     ; onlineDate        ; date       ;                    ;                         ;                          ; true                      ;                      ;                 ;                 ; 10000    ; false                  ;                                    ;                                   ; productOnlineDateValueResolver          ;                                               
+                                  ; $indexedType     ; offlineDate       ; date       ;                    ;                         ;                          ; true                      ;                      ;                 ;                 ; 10000    ; false                  ;                                    ;                                   ; productOfflineDateValueResolver         ;                                               
+                                  ; $indexedType     ; availability      ; string     ;                    ;                         ;                          ; true                      ; true                 ;                 ;                 ; 10000    ; false                  ;                                    ;                                   ; productAvailabilityGroupValueResolver   ;                                               
+
+# Free text search                
+INSERT_UPDATE SolrIndexedProperty ; $solrIndexedType ; name[unique=true] ; ftsQuery[default=false] ; ftsQueryBoost ; ftsQueryMinTermLength ; ftsFuzzyQuery[default=false] ; ftsFuzzyQueryFuzziness ; ftsFuzzyQueryBoost ; ftsFuzzyQueryMinTermLength ; ftsWildcardQuery[default=false] ; ftsWildcardQueryType(code)[default=POSTFIX] ; ftsWildcardQueryBoost ; ftsWildcardQueryMinTermLength
+#							 Exact				Fuzzy					Prefix
+                                  ; $indexedType     ; ean               ; true                    ; 1500          ;                       ;                              
+                                  ; $indexedType     ; code              ; true                    ; 1000          ;                       ;                              ;                        ;                    
+                                  ; $indexedType     ; name              ; true                    ; 500           ;                       ; true                         ;                        ; 500                ;                            ; true                            ; POSTFIX                                     ; 200                   ;                              
+                                  ; $indexedType     ; description       ; true                    ; 200           ;                       ; true                         ;                        ; 100                ;                            ;                                 
+
+# Create the queries that will be used to extract data for Solr
+INSERT_UPDATE SolrIndexerQuery ; solrIndexedType(identifier)[unique=true] ; identifier[unique=true]  ; type(code) ; injectCurrentDate[default=true] ; injectCurrentTime[default=true] ; injectLastIndexTime[default=true] ; query                                                             ; user(uid)
+                               ; $indexedType                             ; $indexedType-fullQuery   ; full       ;                                 ;                                 ; false                             ; "SELECT {p:PK} FROM {Product AS p} WHERE {p:varianttype} IS NULL" ; anonymous
+                               ; $indexedType                             ; $indexedType-updateQuery ; update     ;                                 ;                                 ;                                   ; "                                                                 
+SELECT DISTINCT tbl.pk, tbl.code FROM (
+	{{                            
+		SELECT DISTINCT {p:PK} AS pk, {p:code} AS code
+		FROM {Product AS p LEFT JOIN CustomerReview AS cr ON {cr:product}={p:PK} }
+		WHERE {p:varianttype} IS NULL AND ({p:modifiedtime} >= ?lastIndexTime OR {cr:modifiedtime} >= ?lastIndexTime)
+	}}                            
+	UNION                         
+	{{                            
+		SELECT DISTINCT {p:PK} AS pk, {p:code} AS code
+		FROM {VariantProduct AS p JOIN Product AS bp1 ON {p:baseProduct}={bp1:PK} LEFT JOIN CustomerReview AS cr ON {cr:product}={bp1:PK} }
+		WHERE {p:varianttype} IS NULL AND ({bp1:modifiedtime} >= ?lastIndexTime OR {cr:modifiedtime} >= ?lastIndexTime)
+	}}                            
+	UNION                         
+	{{                            
+		SELECT DISTINCT {p:PK} AS pk, {p:code} AS code
+		FROM {VariantProduct AS p JOIN VariantProduct AS bp1 ON {p:baseProduct}={bp1:PK} JOIN Product AS bp2 ON {bp1:baseProduct}={bp2:PK} LEFT JOIN CustomerReview AS cr ON {cr:product}={bp2:PK} }
+		WHERE {p:varianttype} IS NULL AND ({bp2:modifiedtime} >= ?lastIndexTime OR {cr:modifiedtime} >= ?lastIndexTime)
+	}}                            
+	UNION                         
+	{{                            
+		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
+			{{                          
+				SELECT DISTINCT {sl:productCode} FROM {StockLevel AS sl} WHERE {sl:modifiedtime} >= ?lastIndexTime
+			}}                          
+		)                            
+	}}                            
+) tbl ORDER BY tbl.code        
+"                              ; anonymous                                
+
+
+$solrIndexedTypes=solrIndexedTypes(identifier);
+$solrIndexedType=solrIndexedType(identifier)[unique=true,default='BackofficeProduct'];
+
+INSERT_UPDATE SolrIndexedProperty ; $solrIndexedType ; name[unique=true] ; type(code) ; sortableType(code) ; currency[default=false] ; localized[default=false] ; multiValue[default=false] ; facet[default=false] ; facetType(code) ; facetSort(code) ; priority ; visible[default=false] ; useForSpellchecking[default=false] ; useForAutocomplete[default=false] ; fieldValueProvider                    ; facetDisplayNameProvider ; customFacetSortProvider ; rangeSets(name)
+                                  ;                  ; availability      ; string     ;                    ;                         ;                          ; true                      ; true                 ;                 ;                 ; 10000    ; false                  ;                                    ;                                   ; productAvailabilityGroupValueResolver ;                          
+

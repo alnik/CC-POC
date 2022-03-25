@@ -1,0 +1,12 @@
+#
+# Import the Apparel MultiCountry France BaseStore
+#
+# ENGLISH LOCALIZATION
+#
+ 
+$lang=en
+ 
+$storeUid=multicountry-fr
+ 
+UPDATE BaseStore;uid[unique=true];name[lang=$lang]
+;$storeUid;"Apparel MultiCountry France"

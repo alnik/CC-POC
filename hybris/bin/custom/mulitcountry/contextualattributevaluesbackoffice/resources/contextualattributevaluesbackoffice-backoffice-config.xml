@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<config xmlns="http://www.hybris.com/cockpit/config"		
+		xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+		xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config"
+		xmlns:list-view="http://www.hybris.com/cockpitng/component/listView"
+		xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea"
+		xmlns:explorer-tree="http://www.hybris.com/cockpitng/config/explorertree"
+		xmlns:simple-search="http://www.hybris.com/cockpitng/config/simplesearch"
+		xmlns:advanced-search="http://www.hybris.com/cockpitng/config/advancedsearch"
+		xmlns:df="http://www.hybris.com/cockpitng/component/dynamicForms"
+		xmlns:dsb="http://www.hybris.com/cockpitng/config/dashboard">
+
+	
+	<!-- Update the product view to add a contextual attribute tab -->
+	<context merge-by="type" parent="GenericItem" type="Product" component="editor-area">
+		<editorArea:editorArea name="" logic-handler="contextualBackofficeEditorAreaLogicHandler" >
+			<editorArea:tab name="hmc.tab.product.contextualAttributeValues" position="5">
+				<editorArea:section name="hmc.product.section.contexutal.productattributes">
+						<editorArea:attribute qualifier="ean"  />
+						<editorArea:attribute qualifier="name" />
+						<editorArea:attribute qualifier="picture" />
+						<editorArea:attribute qualifier="galleryImages" />
+						<editorArea:attribute qualifier="description" />
+					</editorArea:section>
+				<editorArea:customSection name="hmc.product.section.contextual.values" spring-bean="contextualEditorAreaSectionRenderer">
+					<editorArea:attribute qualifier="ean"  />
+					<editorArea:attribute qualifier="name" />
+					<editorArea:attribute qualifier="picture" />
+					<editorArea:attribute qualifier="galleryImages" />
+					<editorArea:attribute qualifier="description" />
+				</editorArea:customSection>
+				<editorArea:section name="hmc.product.section.contextual.containers">
+					<editorArea:panel colspan="2" name="panel.contextual">
+						<editorArea:attribute qualifier="contextualAttributeValues"
+											  description="hmc.text.product.multicountry.contextualAttributeValues"
+											  editor="">
+							<!--
+
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>contextualValuesListView</editorArea:value>
+							</editorArea:editor-parameter>
+							-->
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>inlineEditing</editorArea:name>
+								<editorArea:value>true</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>referenceSearchCondition_catalogVersion
+								</editorArea:name>
+								<editorArea:value>{parentObject.catalogVersion}</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>referenceSearchCondition_product</editorArea:name>
+								<editorArea:value>{parentObject}</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+	
+	
+
+	<context merge-by="type" parent="GenericItem" type="Product" component="editor-area" principal="backofficeproductmanagergroup,backofficeproductadministratorgroup">
+		<editorArea:editorArea name="" logic-handler="contextualBackofficeEditorAreaLogicHandler">
+			<editorArea:tab name="hmc.tab.product.contextualAttributeValues" position="5">
+				<editorArea:section name="hmc.product.section.contexutal.productattributes">
+					<editorArea:attribute qualifier="ean"  />
+					<editorArea:attribute qualifier="name" />
+					<editorArea:attribute qualifier="picture" />
+					<editorArea:attribute qualifier="galleryImages" />
+					<editorArea:attribute qualifier="description" />
+				</editorArea:section>
+				<editorArea:customSection name="hmc.product.section.contextual.values" spring-bean="contextualEditorAreaSectionRenderer">
+					<editorArea:attribute qualifier="ean"  />
+					<editorArea:attribute qualifier="name" />
+					<editorArea:attribute qualifier="picture" />
+					<editorArea:attribute qualifier="galleryImages" />
+					<editorArea:attribute qualifier="description" />
+				</editorArea:customSection>
+				<editorArea:section name="hmc.product.section.contextual.containers">
+					<editorArea:panel colspan="2" name="panel.contextual">
+						<editorArea:attribute qualifier="contextualAttributeValues"
+											  description="hmc.text.product.multicountry.contextualAttributeValues"
+											  editor="">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>contextualValuesListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>inlineEditing</editorArea:name>
+								<editorArea:value>true</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>referenceSearchCondition_catalogVersion
+								</editorArea:name>
+								<editorArea:value>{parentObject.catalogVersion}</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>referenceSearchCondition_product</editorArea:name>
+								<editorArea:value>{parentObject}</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+
+
+	<context type="ContextualAttributesContext" component="base">
+    	<y:base xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+       	 	<y:labels>
+           		 <y:label>code</y:label>
+        	</y:labels>
+    	</y:base>
+	</context>
+	
+	<context type="ContextualAttributeValue" component="base">
+    	<y:base xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+       	 	<y:labels>
+           		 <y:label>'Context ['+context.code+ '] Product [' +product.code+ '] Catalog [' +catalogVersion.catalog.id+ '] [' +catalogVersion.version+']'</y:label>
+        	</y:labels>
+    	</y:base>
+	</context>
+	
+	<!-- Additional wizard configuration -->
+
+	<context merge-by="type" type="ContextualAttributeValue" component="create-wizard-no-save">
+		<wz:flow id="ContextualAttributeValuesCustomizationWizard" title="create.title(ctx.TYPE_CODE)">
+			<wz:prepare id="customPrepare">
+				<wz:initialize property="newItem" type="ctx.TYPE_CODE"/>
+				<wz:assign property="newItem.catalogVersion" value="ctx.parentObject.catalogVersion"/>
+				<wz:assign property="newItem.product" value="ctx.parentObject"/>
+			</wz:prepare>
+			<wz:step id="step1" label="flow.allmanadatory">
+				<wz:content id="step1.content">
+					<wz:property-list root="newItem"
+									  include-non-declared-mandatory="true"
+									  include-non-declared-writable-on-creation="false"
+									  include-non-declared-unique="true" enable-non-declared-includes="true"/>
+				</wz:content>
+				<wz:navigation id="step1.navigation">
+					<wz:cancel/>
+					<wz:next />
+					<wz:done/>
+				</wz:navigation>
+			</wz:step>
+			<wz:step id="step2" label="hmc.contextualattribuetevalue.wizard.values">
+				<wz:content>
+					<wz:property-list root="newItem">
+						<wz:property qualifier="ean"/>
+						<wz:property qualifier="name"/>
+						<wz:property qualifier="description"/>
+					</wz:property-list>
+				</wz:content>
+				<wz:navigation id="step2.navigation">
+					<wz:cancel/>
+					<wz:done/>
+				</wz:navigation>
+			</wz:step>
+		</wz:flow>
+    </context>
+
+
+	<!-- compareView -->
+	<context type="Product" component="pcmbackoffice-compare-view">
+		<cv:compare-view xmlns:cv="http://www.hybris.com/cockpitng/component/compareview">
+			<cv:editor-area-ctx/>
+			<cv:grid-view-ctx ctx="pcmbackoffice-grid-view"/>
+			<cv:section name="hmc.tab.attribute" merge-mode="REMOVE"/>
+			<cv:section name="hmc.tab.product.contextualAttributeValues" merge-mode="REPLACE"
+						renderer="contextualAttributesCompareViewSectionRenderer">
+				<cv:attribute qualifier="ean"/>
+				<cv:attribute qualifier="name"/>
+				<cv:attribute qualifier="description"/>
+			</cv:section>
+		</cv:compare-view>
+	</context>
+
+
+	<context merge-by="type" type="ContextualAttributeValue" component="editor-area">
+			<editorArea:editorArea>
+				<editorArea:tab name="hmc.section.contextual.values">
+					<editorArea:section name="hmc.section.contextual.context">
+						<editorArea:attribute qualifier="product" />
+						<editorArea:attribute qualifier="context" />
+						<editorArea:attribute qualifier="catalogVersion" />
+					</editorArea:section>
+					<editorArea:section name="hmc.section.contextual.values">
+						<editorArea:attribute qualifier="name" />
+						<editorArea:attribute qualifier="description" />
+						<editorArea:attribute qualifier="ean" />
+						<editorArea:attribute qualifier="picture" />
+						<editorArea:attribute qualifier="galleryImages" />
+					</editorArea:section>
+				</editorArea:tab>
+			</editorArea:editorArea>
+	</context>
+
+</config>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="multicountrywidgetsbackofficeLabelLocator" class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator" scope="singleton" init-method="init" lazy-init="false">
+  		<property name="location" value="/multicountrywidgetsbackoffice-backoffice-labels/"/>
+  		<property name="name" value="labels"/>
+  	</bean>
+
+	<alias name="defaultProductLockStatusService" alias="productLockStatusService" />
+	<bean class="de.hybris.multicountry.backoffice.services.impl.DefaultProductLockStatusService" name="defaultProductLockStatusService">
+		<property name="productLockingService" ref="productLockingService" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<alias name="defaultProductLockStatusRenderer" alias="productLockStatusRenderer" />
+	<bean
+		class="de.hybris.multicountry.backoffice.renderer.DefaultProductLockStatusRenderer"
+		name="defaultProductLockStatusRenderer">
+		<property name="productLockStatusService" ref="productLockStatusService" />
+	</bean>
+
+	<alias name="defaultSummaryViewLockStatusRenderer" alias="summaryViewLockStatusRenderer" />
+	<bean id="defaultSummaryViewLockStatusRenderer" parent="abstractSummaryViewItemWithIconRenderer"
+		class="de.hybris.multicountry.backoffice.renderer.DefaultSummaryViewLockStatusRenderer">
+		<property name="productLockStatusService" ref="productLockStatusService" />
+	</bean>
+
+	<alias name="multicountryProductStatusRenderer" alias="productStatusRenderer" />
+	<bean
+		class="com.hybris.cockpitng.widgets.common.CompoundWidgetComponentRenderer"
+		id="multicountryProductStatusRenderer" parent="defaultProductStatusRenderer">
+		<property name="renderers">
+			<list merge="true">
+				<ref bean="productLockStatusRenderer" />
+			</list>
+		</property>
+	</bean>
+
+
+	<alias alias="defaultPermissionFacadeStrategy" name="multicountryPlatformPermissionFacadeStrategy"/>
+	<bean id="multicountryPlatformPermissionFacadeStrategy" parent="defaultPlatformPermissionFacadeStrategy"
+		class="com.hybris.backoffice.cockpitng.dataaccess.facades.permissions.DefaultPlatformPermissionFacadeStrategy">
+		<property name="permissionAdvisors">
+			<list merge="true">
+				<bean
+					class="de.hybris.multicountry.backoffice.advisors.ProductInstancePermissionAdvisor">
+					<property name="productLockingService" ref="productLockingService"/>
+					<property name="userService" ref="userService" />
+				</bean>
+				<bean
+					class="de.hybris.multicountry.backoffice.advisors.ProductAvailabilityAssignmentInstancePermissionAdvisor">
+					<property name="userService" ref="userService" />
+				</bean>
+				<bean
+					class="de.hybris.multicountry.backoffice.advisors.PriceRowInstancePermissionAdvisor">
+					<property name="userService" ref="userService" />
+				</bean>
+				<bean
+					class="de.hybris.multicountry.backoffice.advisors.TaxRowInstancePermissionAdvisor">
+					<property name="userService" ref="userService" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="com.hybris.cockpitng.dataaccess.util.DataAccessStrategyExtender"
+		lazy-init="false" init-method="addAll" destroy-method="removeAll">
+		<property name="permissionFacadeStrategies">
+			<list>
+				<ref bean="multicountryPlatformPermissionFacadeStrategy" />
+			</list>
+		</property>
+		<property name="permissionFacadeStrategyRegistry" ref="permissionFacadeStrategyRegistry" />
+	</bean>
+
+	<alias name="defaultExtendedCatalogTreeModelPopulator" alias="extendedCatalogTreeModelPopulator" />
+	<bean id="defaultExtendedCatalogTreeModelPopulator"
+		  class="de.hybris.multicountry.backoffice.populators.ExtendedCatalogTreeModelPopulator"
+		  parent="defaultCatalogTreeModelPopulator">
+		<property name="baseStoreService" ref="baseStoreService" />
+	</bean>
+
+
+	<alias name="defaultAvailabilityGroupConditionAdapter" alias="availabilityGroupConditionAdapter" />
+	<bean id="defaultAvailabilityGroupConditionAdapter"
+		class="de.hybris.multicountry.backoffice.search.adapters.AvailabilityGroupConditionAdapter">
+		<property name="propertyName" value="availability" />
+		<property name="operator"
+			value="#{T(com.hybris.cockpitng.search.data.ValueComparisonOperator).OR}" />
+	</bean>
+
+	<!-- <cng:list-extender bean="catalogTreeFilterAdvancedSolrSearchInitializer" 
+		property="conditionsAdapters"> <cng:add value-type="com.hybris.backoffice.widgets.searchadapters.conditions.SearchConditionAdapter"> 
+		<ref bean="flexibleSearchBaseStoreConditionAdapter" /> </cng:add> </cng:list-extender> -->
+
+	<bean class="com.hybris.cockpitng.core.util.bean.ListBeanExtender"
+		lazy-init="false">
+		<constructor-arg value="catalogTreeFilterAdvancedFlexibleSearchInitializer" />
+		<property name="property" value="conditionsAdapters" />
+		<property name="add">
+			<list>
+				<ref bean="availabilityGroupConditionAdapter" />
+			</list>
+		</property>
+		<property name="resolverFactory" ref="expressionResolverFactory" />
+	</bean>
+
+	<bean class="com.hybris.cockpitng.core.util.bean.ListBeanExtender"
+		lazy-init="false">
+		<constructor-arg value="catalogTreeFilterAdvancedSolrSearchInitializer" />
+		<property name="property" value="conditionsAdapters" />
+		<property name="add">
+			<list>
+				<ref bean="availabilityGroupConditionAdapter" />
+			</list>
+		</property>
+		<property name="resolverFactory" ref="expressionResolverFactory" />
+	</bean>
+
+	<alias name="defaultBaseStoreTreeFilterAdvancedFlexibleSearchInitializer"
+		alias="catalogTreeFilterAdvancedFlexibleSearchInitializer" />
+	<bean id="defaultBaseStoreTreeFilterAdvancedFlexibleSearchInitializer"
+		class="de.hybris.multicountry.backoffice.search.adapters.BaseStoreTreeFilterAdvancedSearchInitializer"
+		parent="defaultCatalogTreeFilterAdvancedFlexibleSearchInitializer">
+	</bean>
+
+	<alias name="defaultBaseStoreTreeFilterAdvancedSolrSearchInitializer"
+		alias="catalogTreeFilterAdvancedSolrSearchInitializer" />
+	<bean id="defaultBaseStoreTreeFilterAdvancedSolrSearchInitializer"
+		class="de.hybris.multicountry.backoffice.search.adapters.BaseStoreTreeFilterAdvancedSearchInitializer"
+		parent="defaultCatalogTreeFilterAdvancedSolrSearchInitializer">
+	</bean>
+
+	<alias name="defaultAvailabilityGroupConditionDecorator" alias="availabilityGroupConditionDecorator" />
+	<bean id="defaultAvailabilityGroupConditionDecorator"
+		class="de.hybris.multicountry.backoffice.search.decorators.AvailabilityGroupConditionDecorator">
+		<property name="userService" ref="userService" />
+		<property name="propertyName" value="availability" />
+	</bean>
+
+	<bean class="com.hybris.cockpitng.core.util.bean.ListBeanExtender"
+		lazy-init="false">
+		<constructor-arg value="backofficeFacetSearchService" />
+		<property name="property" value="conditionsDecorators" />
+		<property name="add">
+			<list>
+				<ref bean="availabilityGroupConditionDecorator" />
+			</list>
+		</property>
+		<property name="resolverFactory" ref="expressionResolverFactory" />
+	</bean>
+
+	<alias name="permissionAssortmentViewDnD" alias="assortmentViewDnD" />
+	<bean id="permissionAssortmentViewDnD" class="de.hybris.multicountry.backoffice.strategies.PermissionDragAndDropStrategy" parent="defaultAssortmentViewDnD" init-method="initialize">
+		<property name="permissionFacade" ref="permissionFacade" />
+	</bean>
+	
+</beans>

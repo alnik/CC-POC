@@ -1,0 +1,13 @@
+.yw-summaryview-section-container-content {
+  .yw-summaryview-icon-item-icon {
+    &.yw-summaryview-lock-status-locked {
+      background: url("/backoffice/cng/images/icon_lock_status_locked.svg") center no-repeat;
+    }
+    &.yw-summaryview-lock-status-owned {
+      background: url("/backoffice/cng/images/icon_lock_status_owned.svg") center no-repeat;
+    }
+    &.yw-summaryview-lock-status-unlocked {
+      background: url("/backoffice/cng/images/icon_lock_status_unlocked.svg") center no-repeat;
+    }
+  }
+}

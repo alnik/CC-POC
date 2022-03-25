@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:noNamespaceSchemaLocation="items.xsd">
+	
+	
+	<relations>
+	
+		<relation code="Product2ContextualAttributeValueRel"
+			localized="false" generate="true" autocreate="true">
+			<description>This relation determines product attribute values</description>
+			<sourceElement qualifier="product" type="Product"
+				cardinality="one" ordered="false">
+				<modifiers optional="false" unique="true" read="true" write="true"
+					initial="true" />
+			</sourceElement>
+			<targetElement qualifier="contextualAttributeValues"
+				type="ContextualAttributeValue" cardinality="many" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</targetElement>
+		</relation>
+		
+		<relation code="SolrFacetSearchConfig2ContextualAttributesContextRelation" autocreate="true" generate="true" localized="false">
+			<description>This relation determines contextual context to be indexed</description>
+			<deployment table="solrconf2contextrel" typecode="20103" />
+			<sourceElement qualifier="facetSearchConfigs" type="SolrFacetSearchConfig"
+				cardinality="many" ordered="false">
+				<modifiers optional="true" unique="false" read="true" write="true" initial="false" />
+			</sourceElement>
+			<targetElement qualifier="contexts" type="ContextualAttributesContext" cardinality="many" collectiontype="list" ordered="true">
+				<modifiers optional="true" read="true" write="true" search="true" />
+			</targetElement>
+		</relation>
+		
+	</relations>
+	
+	<itemtypes>
+		<itemtype code="ContextualAttributeValue" autocreate="true" generate="true">
+			<description>Attribute value for context.</description>
+			<deployment table="contextualattributevalue" typecode="20102"/>
+			<custom-properties>
+				<property name="catalogItemType">
+					<value>java.lang.Boolean.TRUE</value>
+				</property>
+				<property name="catalogVersionAttributeQualifier">
+					<value>"catalogVersion"</value>
+				</property>
+				<property name="uniqueKeyAttributeQualifier">
+					<value>"product,context"</value>
+				</property>
+			</custom-properties>
+			<attributes>
+			    <attribute qualifier="catalogVersion" type="CatalogVersion">
+					<description>CatalogVersion this type is catalog aware</description>
+					<modifiers read="true" write="true" optional="false" initial="true" unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="name" type="localized:java.lang.String">
+					<description>contextual attribute.</description>
+					<modifiers initial="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="ean" type="java.lang.String">
+					<description>contextual attribute.</description>
+					<modifiers initial="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="description" type="localized:java.lang.String">
+					<description>contextual attribute.</description>
+					<modifiers />
+					<persistence type="property" />					
+				</attribute>
+				<attribute qualifier="picture" type="Media">
+					<description>contextual attribute.</description>
+					<modifiers />
+					<persistence type="property" />					
+				</attribute>
+				<attribute qualifier="galleryImages" type="MediaContainerList">
+						<description>A list of additional images for the product.</description>
+						<persistence type="property" />
+					</attribute>
+				<attribute qualifier="context" type="ContextualAttributesContext">
+					<description>Context of the attribute.</description>
+					<modifiers initial="true" optional="false" unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+			<indexes>
+				<index name="productIDX">
+					<key attribute="product"/>
+				</index>
+				<index name="contextIDX">
+					<key attribute="context" />
+				</index>
+			</indexes>
+		</itemtype>
+		
+		<itemtype code="SolrIndexedProperty"  autocreate="false" generate="false">
+			<description>Extending SolrIndexed type with additional contextual value attributes.</description>
+			<attributes>
+				<attribute qualifier="contextual" type="boolean">
+						<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+						<modifiers optional="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="BaseStore" autocreate="false" generate="false">
+			<description>Extending BaseStore type with additional context reference.</description>
+			<attributes>
+				<attribute type="ContextualAttributesContext" qualifier="contextualAttributesContext">
+					<description>Contextual attribute context</description>
+					<persistence type="property" />
+					<modifiers optional="true"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="ContextualAttributesContext" autocreate="true" generate="true">
+			<deployment table="contexts" typecode="20150"/>
+			<attributes>
+				<attribute qualifier="name" type="java.lang.String">
+					<modifiers optional="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="code" type="java.lang.String">
+					<modifiers optional="false" initial="true" unique="true" />
+					<persistence type="property"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+				
+	</itemtypes>
+</items>

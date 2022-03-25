@@ -1,0 +1,55 @@
+$solrIndexedType = solrIndexedType(identifier)[unique=true]
+$indexedType = apparelMultiCountryProductType
+
+INSERT_UPDATE ContextualAttributesContext; code[unique = true]; name
+                                         ; UKContext          ; Context for UK attributes
+                                         ; DEContext          ; Context for DE attributes
+
+UPDATE BaseStore; uid[unique = true]; contextualAttributesContext(code)
+                ; multicountry-uk   ; UKContext
+                ; multicountry-fr   ; UKContext
+                ; multicountry-de   ; DEContext
+
+UPDATE SolrFacetSearchConfig; name[unique = true]      ; contexts(code)
+                            ; apparelMultiCountryIndex ; UKContext,DEContext
+
+UPDATE SolrIndexedProperty; $solrIndexedType; name[unique = true]; fieldValueProvider; valueProviderParameter; contextual;
+                          ; $indexedType    ; name               ;                   ;                       ; true
+                          ; $indexedType    ; description        ;                   ;                       ; true
+                          ; $indexedType    ; ean                ;                   ;                       ; true
+
+#INSERT_UPDATE ContextualAttributesValues;[unique=true];contextual
+#;ean;true
+
+
+$backofficeSolrIndexedType = solrIndexedType(identifier)[unique = true, default = 'BackofficeProduct'];
+$backofficeSFCName = Solr Config for Backoffice;
+
+
+#simple fields
+UPDATE SolrIndexedProperty; name[unique = true]; $backofficeSolrIndexedType; contextual[default = true]
+                          ; description        ;
+                          ; ean                ;
+
+#free text search fields
+INSERT_UPDATE SolrIndexedProperty; name[unique = true]; $backofficeSolrIndexedType; fieldValueProvider; contextual[default = true]
+                                 ; name               ;                 ;                   ;
+
+
+INSERT_UPDATE SolrFacetSearchConfig; name[unique = true]; contexts(code)
+                                   ; $backofficeSFCName ; UKContext,DEContext
+
+
+
+$catalog-id = apparelMultiCountryProductCatalog
+$catalog-version = Staged
+
+
+$catalogversion = catalogversion(catalog(id), version)[unique=true, default=$catalog-id:$catalog-version]
+
+INSERT_UPDATE ContextualAttributeValue; product(code, $catalogversion)[unique = true]  ; context(code)[unique = true]; ean      ; name[lang = en]         ; name[lang = de]         ; $catalogversion
+                                      ; 29531:apparelMultiCountryProductCatalog:Staged ; UKContext                   ; 08150815 ; UKContext (en) of 29531 ; UKContext (de) of 29531 ;
+                                      ; 29531:apparelMultiCountryProductCatalog:Staged ; DEContext                   ; 13371337 ; DEContext (en) of 29531 ; DEContext (de) of 29531 ;
+                                      ; 29532:apparelMultiCountryProductCatalog:Staged ; UKContext                   ; 13371337 ; UKContext (en) of 29532 ; UKContext (de) of 29532 ;
+                                      ; 29532:apparelMultiCountryProductCatalog:Staged ; DEContext                   ; 08150815 ; DEContext (en) of 29532 ; DEContext (de) of 29532 ;
+

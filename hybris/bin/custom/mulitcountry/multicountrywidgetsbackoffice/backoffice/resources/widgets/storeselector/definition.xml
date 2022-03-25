@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
+id="com.hybris.commercesearchbackoffice.multicountryStoreSelector">
+    <name>Store selector</name>
+    <description>Store site and catalog version</description>
+    <defaultTitle>Store selector</defaultTitle>
+    <author>hybris</author>
+    <version>1.0</version>
+    <keywords>
+        <keyword>commercesearchbackoffice</keyword>
+    </keywords>
+    <view src="storeselector.zul"/>
+    <controller class="de.hybris.commercesearchbackoffice.widgets.MulticountrySiteSelectorController"/>
+    <sockets>
+		<output id="selectSite" type="de.hybris.platform.commercesearchbackoffice.data.SiteData"/>
+		<output id="selectLanguage" type="de.hybris.platform.commercefacades.storesession.data.LanguageData"/>
+    </sockets>
+    <settings>
+		<setting key="listMode" default-value="true" type="Boolean"/>
+	</settings>
+</widget-definition>

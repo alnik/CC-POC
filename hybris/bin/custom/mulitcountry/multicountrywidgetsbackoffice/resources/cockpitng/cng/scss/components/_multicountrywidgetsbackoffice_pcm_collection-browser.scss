@@ -1,0 +1,40 @@
+/* The base layout for an icon in the browser */
+@mixin attribute-icon-base {
+  width: 16px;
+  height: 16px;
+  padding: 8px;
+  display: inline;
+  position: relative;
+}
+
+/* The :before layout for the image inside the icon */
+@mixin attribute-icon-before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+}
+
+/* multicountrywidgetsbackoffice adds a lock status indicator, only visible when locked */
+.yw-image-attribute-lock-icon {
+
+  &.yw-image-attribute-lock-status-locked {
+    @include attribute-icon-base;
+    &:before {
+      @include attribute-icon-before;
+      background: url("/backoffice/cng/images/icon_lock_status_locked.svg") center no-repeat;
+    }
+  }
+
+  &.yw-image-attribute-lock-status-owned {
+    @include attribute-icon-base;
+    &:before {
+      @include attribute-icon-before;
+      background: url("/backoffice/cng/images/icon_lock_status_owned.svg") center no-repeat;
+    }
+  }
+}

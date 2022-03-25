@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns="http://www.hybris.com/cockpit/config"
+	xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+	xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config"
+	xmlns:list-view="http://www.hybris.com/cockpitng/component/listView"
+	xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea"
+	xmlns:explorer-tree="http://www.hybris.com/cockpitng/config/explorertree"
+	xmlns:na="http://www.hybris.com/cockpitng/config/notifications">
+
+
+	<context merge-by="type" type="Product" component="grid-view" module="platformbackoffice">
+		<grid-view:grid-view xmlns:grid-view="http://www.hybris.com/cockpitng/component/gridView">
+			<grid-view:additionalRenderer spring-bean="productLockStatusRenderer" />
+		</grid-view:grid-view>
+	</context>
+
+	<context type="Product" component="editorareaactions" module="platformbackoffice">
+		<y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<y:group qualifier="common" show-group-header="false">
+			</y:group>
+			<y:group qualifier="locking" show-group-header="false">
+				<y:label>actiongroup.locking</y:label>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" property="currentObject" />
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" property="currentObject" />
+			</y:group>
+		</y:actions>
+	</context>
+
+	<context merge-by="type" type="Product" component="pcmbackoffice-grid-view">
+		<grid-view:grid-view xmlns:grid-view="http://www.hybris.com/cockpitng/component/gridView">
+			<grid-view:additionalRenderer spring-bean="productLockStatusRenderer" />
+		</grid-view:grid-view>
+	</context>
+
+	<context merge-by="type" type="Product" component="pcmbackoffice-summary-view">
+        <summary-view:summary-view xmlns:summary-view="http://www.hybris.com/cockpitng/component/summaryview">
+            <summary-view:section name="summaryview.section.statuses">
+				<summary-view:custom-attribute label="summaryview.field.lockstatus" qualifier="lockStatus" spring-bean="summaryViewLockStatusRenderer"/>
+            </summary-view:section>
+        </summary-view:summary-view>
+    </context>
+    
+    <context merge-by="type" type="Product" component="pcmbackoffice-listviewactions">
+		<y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<y:group qualifier="common">
+				<y:label>actiongroup.common</y:label>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" property="selectedObjects" triggerOnKeys="^l"/>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" property="selectedObjects" triggerOnKeys="^u"/>
+			</y:group>
+		</y:actions>
+	</context>
+	
+	<context merge-by="type" type="Product" component="pcmbackoffice-gridviewactions">
+		<y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<y:group qualifier="common">
+				<y:label>actiongroup.common</y:label>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" property="selectedObjects" triggerOnKeys="^l"/>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" property="selectedObjects" triggerOnKeys="^u"/>
+			</y:group>
+		</y:actions>
+	</context>
+    
+    <context merge-by="type" type="Product" component="pcmbackoffice-editorareaactions">
+		<y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<y:group qualifier="common">
+				<y:label>actiongroup.common</y:label>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" property="currentObject" triggerOnKeys="^l"/>
+				<y:action action-id="de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" property="currentObject" triggerOnKeys="^u"/>
+			</y:group>
+		</y:actions>
+	</context>
+
+	<context component="pcmbackoffice-catalogFilterTree">
+		<n:explorer-tree xmlns:n="http://www.hybris.com/cockpitng/config/explorertree">
+			<n:dynamic-node id="Catalogs" indexing-depth="15" populator-bean-id="extendedCatalogTreeModelPopulator"
+							expanded-by-default="true" hide-root-node="true">
+				<n:dynamic-node-parameter>
+					<n:name>simpleLabels</n:name>
+					<n:value>true</n:value>
+				</n:dynamic-node-parameter>
+			</n:dynamic-node>
+		</n:explorer-tree>
+	</context>
+
+    	<!-- Add timezones to the explorer tree under Internationaliztion -->
+	<context component="explorer-tree" merge-by="module">
+		<explorer-tree:explorer-tree>
+			<explorer-tree:navigation-node id="hmc_treenode_c2l">
+				<explorer-tree:type-node id="Timezones" code="TimezoneEnum" position="20"/>
+			</explorer-tree:navigation-node>
+		</explorer-tree:explorer-tree>
+	</context>
+
+	<!-- Editor view for the lockedBy attribute -->
+	<context merge-by="type" parent="GenericItem" type="User" component="lockedByListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="uid" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Editor view for the availability attribute -->
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityAssignment" component="availabilityListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="availabilityGroup.id" />
+			<list-view:column qualifier="status" />
+			<list-view:column qualifier="onlineDate" />
+			<list-view:column qualifier="offlineDate" />
+		</list-view:list-view>
+	</context>
+
+	<context type="ProductAvailabilityAssignment" component="base">
+		<y:base xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<y:labels>
+				<y:label>'[' + availabilityGroup.id + '] Product [' + product.code + '] Catalog [' + catalogVersion.catalog.id + '] [' + catalogVersion.version + ']'</y:label>
+			</y:labels>
+		</y:base>
+	</context>
+
+  <!-- Default editor -->
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityAssignment" component="editor-area">
+		<editorArea:editorArea xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea" name="">
+			<editorArea:essentials>
+				<editorArea:essentialSection name="hmc.essential">
+					<editorArea:attribute qualifier="availabilityGroup"/>
+					<editorArea:attribute qualifier="product"/>
+					<editorArea:attribute qualifier="catalogVersion"/>
+					<editorArea:attribute qualifier="status"/>
+					<editorArea:attribute qualifier="onlineDate"/>
+					<editorArea:attribute qualifier="offlineDate"/>
+				</editorArea:essentialSection>
+			</editorArea:essentials>
+			<editorArea:tab name="hmc.properties"/>
+		</editorArea:editorArea>
+	</context>
+
+	<!-- Update the product view to add a multicountry tab -->
+	<context merge-by="type" parent="GenericItem" type="Product" component="editor-area">
+		<editorArea:editorArea name="">
+			<editorArea:tab name="hmc.tab.product.multicountry" position="10">
+				<editorArea:section name="hmc.product.section.multicountry">
+					<editorArea:panel colspan="2" name="panel.lockedBy">
+						<editorArea:attribute qualifier="lockedBy" description="hmc.text.product.multicountry.lockedBy" editor="de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>lockedByListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+					<editorArea:panel colspan="2" name="panel.lockedBy">
+						<editorArea:attribute qualifier="availability"
+							description="hmc.text.product.multicountry.availability"
+							editor="de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>availabilityListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+	
+	<context merge-by="type" parent="GenericItem" type="Product" component="editor-area" principal="backofficeproductmanagergroup,backofficeproductadministratorgroup">
+		<editorArea:editorArea name="">
+			<editorArea:tab name="hmc.tab.product.multicountry" position="10">
+				<editorArea:section name="hmc.product.section.multicountry">
+					<editorArea:panel colspan="2" name="panel.lockedBy">
+						<editorArea:attribute qualifier="lockedBy" description="hmc.text.product.multicountry.lockedBy" editor="de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>lockedByListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+					<editorArea:panel colspan="2" name="panel.lockedBy">
+						<editorArea:attribute qualifier="availability"
+							description="hmc.text.product.multicountry.availability"
+							editor="de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>availabilityListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+	
+	
+	
+    
+	<!-- Editor view for the lockedBy attribute -->
+	<context merge-by="type" parent="GenericItem" type="Employee" component="baseStoreEmployeeListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="uid" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityGroup" component="baseStoreAvailabilityGroupsListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="id" />
+			<list-view:column qualifier="description" />
+		</list-view:list-view>
+	</context>
+
+	<context type="ProductAvailabilityGroup" component="base">
+		<y:base xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<y:labels>
+				<y:label>id + ' (' + pk.toString() + ')'</y:label>
+			</y:labels>
+		</y:base>
+	</context>
+
+	<!-- Default editor -->
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityGroup" component="editor-area">
+		<editorArea:editorArea xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea" name="">
+			<editorArea:essentials>
+				<editorArea:essentialSection name="hmc.essential">
+					<editorArea:attribute qualifier="id"/>
+					<editorArea:attribute qualifier="description"/>
+					<editorArea:attribute qualifier="stores"/>
+				</editorArea:essentialSection>
+			</editorArea:essentials>
+			<editorArea:tab name="hmc.properties">
+				<editorArea:section name="hmc.properties">
+					<editorArea:panel name="">
+						<editorArea:attribute qualifier="assignments"/>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+	<!-- Editor view for the employee managedStores attribute -->
+	<context merge-by="type" parent="GenericItem" type="BaseStore" component="employeeStoreListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="uid" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Update the base store view to add a multicountry tab -->
+	<context merge-by="type" parent="GenericItem" type="BaseStore" component="editor-area">
+		<editorArea:editorArea name="">
+			<editorArea:tab name="hmc.tab.basestore.multicountry">
+				<editorArea:section name="hmc.basestore.section.multicountry">
+					<editorArea:attribute qualifier="country"/>
+					<editorArea:attribute qualifier="userPriceGroup"/>
+					<editorArea:attribute qualifier="taxGroup"/>
+					<editorArea:attribute qualifier="timezone"/>
+					<editorArea:attribute qualifier="availabilityGroups" description="hmc.text.basestore.multicountry.availabilityGroups" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+						<editorArea:editor-parameter>
+							<editorArea:name>listConfigContext</editorArea:name>
+							<editorArea:value>baseStoreAvailabilityGroupsListView</editorArea:value>
+						</editorArea:editor-parameter>
+						<editorArea:editor-parameter>
+							<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+							<editorArea:value>create-wizard-no-save</editorArea:value>
+						</editorArea:editor-parameter>
+					</editorArea:attribute>
+				</editorArea:section>
+				<editorArea:section name="hmc.basestore.section.employee">
+					<editorArea:panel name="panel.lockedBy">
+						<editorArea:attribute qualifier="employees" description="hmc.text.basestore.multicountry.employees" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>baseStoreEmployeeListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+
+	<!-- Editor view for the employee lockedProducts attribute -->
+	<context merge-by="type" parent="GenericItem" type="Product" component="employeeLockedProductsListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="code" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Update the employee view to add a multicountry data -->
+	<context merge-by="type" parent="User" type="Employee" component="editor-area">
+		<editorArea:editorArea name="">
+			<editorArea:tab name="hmc.tab.employee.multicountry">
+				<editorArea:section name="hmc.properties">
+					<editorArea:panel name="panel.managedStores">
+						<editorArea:attribute qualifier="managedStores" description="hmc.text.employee.multicountry.managedStores" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>employeeStoreListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+
+					<editorArea:panel name="panel.lockedProducts">
+						<editorArea:attribute qualifier="lockedProducts" description="hmc.text.employee.multicountry.lockedProducts" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>employeeLockedProductsListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+	
+	<context merge-by="type" parent="GenericItem" type="AbstractAsSearchProfile" component="editor-area">
+		<editorArea:editorArea
+			xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea"
+			xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+			<editorArea:essentials>
+				<editorArea:essentialSection name="hmc.essential">
+					<editorArea:attribute qualifier="code" />
+					<editorArea:attribute qualifier="name" />
+					
+					<editorArea:attribute editor="de.hybris.platform.adaptivesearchbackoffice.editors.configurabledropdown" qualifier="indexType">
+						<editorArea:editor-parameter>
+							<editorArea:name>dataProvider</editorArea:name>
+							<editorArea:value>asIndexTypeDataProvider</editorArea:value>
+						</editorArea:editor-parameter>
+					</editorArea:attribute>
+					
+					<editorArea:attribute qualifier="catalogVersion" />
+					<editorArea:attribute qualifier="baseStore" />
+					
+				</editorArea:essentialSection>
+			</editorArea:essentials>
+		</editorArea:editorArea>
+	</context>
+
+	<context type="AbstractAsSearchProfile">
+		<context component="create-wizard-with-parent-multi-country">
+			<wz:flow xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config"
+				id="as-search-profile-create-wizard-with-parent-multi-country"
+				title="create.title(ctx.TYPE_CODE)">
+				<wz:prepare id="prepare">
+					<wz:initialize property="newItem" type="ctx.TYPE_CODE" />
+					<wz:assign property="newItem.indexType" value="ctx.parentObject.indexType" />
+					<wz:assign property="newItem.catalogVersion" value="ctx.parentObject.catalogVersion" />
+					<wz:assign property="newItem.baseStore" value="ctx.parentObject.baseStore" />
+				</wz:prepare>
+				<wz:step id="step1" label="create.assearchprofile.essential.label"
+					sublabel="create.assearchprofile.essential.sublabel">
+					<wz:content id="step1.content">
+						<wz:property-list root="newItem">
+							<wz:property qualifier="code" />
+							<wz:property qualifier="name" />
+						</wz:property-list>
+					</wz:content>
+					<wz:navigation id="step1.navigation">
+						<wz:cancel />
+						<wz:done visible="newItem.code != null AND newItem.indexType != null">
+							<wz:save property="newItem" />
+						</wz:done>
+					</wz:navigation>
+				</wz:step>
+			</wz:flow>
+		</context>
+	</context>
+
+
+	<context component="notification-area" source="">
+		<na:notification-area>
+			<na:notifications eventType="McProductsLocked" level="SUCCESS">
+				<na:message>notification.multicountry.products.locked.success</na:message>
+				<na:references>
+					<na:reference placeholder="0" label="#root.size()" message="#root.size()"/>
+				</na:references>
+			</na:notifications>
+			<na:notifications eventType="McProductsLocked" level="FAILURE">
+				<na:message>notification.multicountry.products.locked.failure</na:message>
+				<na:references>
+					<na:reference placeholder="0" label="#root.size()" message="#root.size()"/>
+				</na:references>
+			</na:notifications>
+			<na:notifications eventType="McProductsUnlocked" level="SUCCESS">
+				<na:message>notification.multicountry.products.unlocked.success</na:message>
+				<na:references>
+					<na:reference placeholder="0" label="#root.size()" message="#root.size()"/>
+				</na:references>
+			</na:notifications>
+			<na:notifications eventType="McProductsUnlocked" level="FAILURE">
+				<na:message>notification.multicountry.products.unlocked.failure</na:message>
+				<na:references>
+					<na:reference placeholder="0" label="#root.size()" message="#root.size()"/>
+				</na:references>
+			</na:notifications>
+		</na:notification-area>
+	</context>
+           
+</config>

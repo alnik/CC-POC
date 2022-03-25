@@ -1,0 +1,16 @@
+#
+# Multicountry Sampledata
+#
+# Additional languages 
+#
+
+INSERT_UPDATE Language;isocode[unique=true];name[lang=en];active[default=true];fallbacklanguages(isocode)
+;es;Spanish;;en
+;nl;Dutch;;en
+;it;Italian;;en
+;fr;French;;en
+;de;German;;en
+
+
+INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
+;GBP;1;2;£

@@ -1,0 +1,30 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2000-2016 SAP SE or an SAP affiliate company.
+# All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+#
+# Import Sample Product Cockpit User
+# 
+
+
+$defaultPassword=1234
+$stores=powertools-multicountry-uk,powertools-multicountry-de
+
+INSERT_UPDATE UserGroup ; UID[unique=true]    ; groups(uid)[mode=append]  
+                        ; productmanagergroup ; cockpitgroup,employeegroup
+
+INSERT_UPDATE Employee ; UID[unique=true]             ; password[default=$defaultPassword] ; description                   ; name                          ; groups(uid)                                ; sessionLanguage(isocode) ; sessionCurrency(isocode) ; managedStores(uid);backOfficeLoginDisabled[default=false]
+                       ; productmanager               ;                                    ; Product manager               ; Product Manager               ; productmanagergroup,multicountryadmingroup ; en                       ; EUR                      ; $stores                    ;
+                       ; productmanager-powertools-uk ;                                    ; Powertools UK Product manager ; Powertools UK Product Manager ; productmanagergroup                        ; en                       ; EUR                      ; powertools-multicountry-uk ;
+                       ; productmanager-powertools-de ;                                    ; Powertools DE Product manager ; Powertools DE Product Manager ; productmanagergroup                        ; en                       ; EUR                      ; powertools-multicountry-de ;
+
+UPDATE CatalogVersion ; catalog(id)[unique=true]             ; version[unique=true] ; writePrincipals(uid)               ;  
+                      ; powertoolsMultiCountryProductCatalog ; Online               ; productmanagergroup,productmanager ;  
+                      ; powertoolsMultiCountryProductCatalog ; Staged               ; productmanagergroup,productmanager ;  

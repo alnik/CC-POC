@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/solrfacetsearch"/>
+	<classpathentry kind="src" path="/platform"/>
+	<classpathentry kind="src" path="/multicountry"/>
+	<classpathentry kind="src" path="/commercefacades"/>
+	<classpathentry kind="output" path="eclipsebin"/>
+</classpath>

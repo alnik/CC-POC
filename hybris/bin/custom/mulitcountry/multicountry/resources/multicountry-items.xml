@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2012 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+<!-- ATTENTION: This is just an example file. You have to edit it according 
+	to your needs. -->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="items.xsd">
+
+	
+	<collectiontypes>
+			<collectiontype code="ProductAvailabilityAssignmentCollection" elementtype="ProductAvailabilityAssignment" autocreate="true" generate="true"/>
+	</collectiontypes>
+	
+	<enumtypes>
+		<enumtype generate="true" code="TimezoneEnum" autocreate="true" dynamic="true"/>
+	</enumtypes>
+	
+	<relations>
+		<relation code="Product2ProductAvailabilityAssignmentRel"
+			localized="false" generate="true" autocreate="true">
+			<description>This relation determines which products availability
+				assignment</description>
+			<sourceElement qualifier="product" type="Product"
+				cardinality="one" ordered="false">
+				<modifiers optional="false" unique="true" read="true" write="true"
+					initial="true" />
+			</sourceElement>
+			<targetElement qualifier="availability"
+				type="ProductAvailabilityAssignment" cardinality="many" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="ProductAvailabilityAssignment2ProductAvailabilityGroupRel"
+			localized="false" generate="true" autocreate="true">
+			<description>This relation determines which products are available to
+				which product group</description>
+			<sourceElement qualifier="assignments"
+				type="ProductAvailabilityAssignment" cardinality="many" ordered="false">
+				<modifiers optional="true" read="true" write="false" />
+			</sourceElement>
+			<targetElement qualifier="availabilityGroup" type="ProductAvailabilityGroup"
+				cardinality="one" ordered="false">
+				<modifiers optional="false" unique="true" read="true" write="true"
+					initial="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="ProductAvailabilityGroup2BaseStoreRel"
+			localized="false" generate="true" autocreate="true">
+			<description>This relation determines which product groups are
+				visible in the BaseStore</description>
+			<deployment table="prodavailgroup2storerel"
+				typecode="20009" />
+			<sourceElement qualifier="availabilityGroups" type="ProductAvailabilityGroup"
+				cardinality="many" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</sourceElement>
+			<targetElement qualifier="stores" type="BaseStore"
+				cardinality="many" collectiontype="set" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="Employee2BaseStoreRel" localized="false"
+			generate="true" autocreate="true">
+			<description>This relation determines which base stores an Employee
+				can manage</description>
+			<deployment table="Employee2BaseStoreRel" typecode="20001" />
+			<sourceElement qualifier="employees" type="Employee"
+				cardinality="many" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</sourceElement>
+			<targetElement qualifier="managedStores" type="BaseStore"
+				cardinality="many" collectiontype="set" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="Employee2LockedProductsRel" localized="false"
+			generate="true" autocreate="true">
+			<description>This relation determines the products locked by an
+				Employee</description>
+			<deployment table="Employee2LockedProdsRel" typecode="20002" />
+			<sourceElement qualifier="lockedBy" type="Employee"
+				cardinality="many" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</sourceElement>
+			<targetElement qualifier="lockedProducts" type="Product"
+				cardinality="many" collectiontype="set" ordered="false">
+				<modifiers optional="true" read="true" write="true" />
+			</targetElement>
+		</relation>						
+		
+	</relations>
+
+	<itemtypes>
+			
+	 <itemtype code="BaseStore" autocreate="false" generate="false">
+			<description>Extending BaseStore type with additional multi-country attributes.</description>
+			<attributes>
+				<attribute qualifier="userPriceGroup" type="UserPriceGroup">
+					<description>The specific price group for this BaseStore. Should we make this optional?</description>
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+				<attribute qualifier="country" type="Country">
+					<description>The default country for the site. Could be useful for delivery pricing. Should we make this optional?</description>
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+				<attribute type="TimezoneEnum" qualifier="timezone">
+					<description>Adds a timezone to the store so that restrictions can be relative to the store timezone</description>
+					<persistence type="property" />
+					<modifiers optional="true"/>
+				</attribute>
+				<attribute qualifier="userDiscountGroup" type="UserDiscountGroup">
+					<description>The specific discount group for this BaseStore. Should we make this optional?</description>
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="ProductAvailabilityGroup"
+			jaloclass="de.hybris.platform.multicountry.jalo.productavailabilitygroup.ProductAvailabilityGroup"
+			autocreate="true" generate="true">
+			<description>Product Availability assignment for multi-country.</description>
+			<deployment table="productavailabilitygroup" typecode="20010"/>
+			<attributes>
+				<attribute qualifier="id" type="java.lang.String">
+					<description>The identifier for the product availability group.
+					</description>
+					<persistence type="property" />
+					<modifiers optional="false" initial="true" unique="true" />
+				</attribute>
+				<attribute qualifier="description" type="localized:java.lang.String">
+					<description>The description for the product availability group.
+					</description>
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="ProductAvailabilityAssignment"
+			jaloclass="de.hybris.platform.multicountry.jalo.productavailabilitygroup.ProductAvailabilityAssignment"
+			autocreate="true" generate="true">
+			<description>Product Availability assignment for multi-country.</description>
+			<deployment table="productavailassignment" typecode="20011"/>
+			
+			<custom-properties>
+				<property name="catalogItemType"><value>java.lang.Boolean.TRUE</value></property>
+				<property name="catalogVersionAttributeQualifier"><value>"catalogVersion"</value></property>
+				<property name="uniqueKeyAttributeQualifier">
+					<value>"product,availabilityGroup"</value>
+				</property>
+			</custom-properties>
+			<attributes>
+				<attribute qualifier="catalogVersion" type="CatalogVersion">
+					<description>CatalogVersion</description>
+					<modifiers read="true" write="true" search="true" optional="false" initial="true" unique="true"/>
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="onlineDate" type="java.util.Date">
+					<description>The date when product is made available online
+					</description>
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+				<attribute qualifier="offlineDate" type="java.util.Date">
+					<description>The date when product is taken offline
+					</description>
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+				<attribute qualifier="status" type="ArticleApprovalStatus">
+					<description>The default Tax group for the site.
+					</description>
+					<persistence type="property" />
+					<modifiers optional="false" initial="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="MultiCountryCatalogVersionSyncJob"
+			jaloclass="de.hybris.platform.multicountry.jalo.synchronization.MultiCountryCatalogVersionSyncJob"
+			autocreate="true" generate="true" extends="CatalogVersionSyncJob">
+			<description>Extending Catalog Version SyncJob for preventing locked
+				items to be synchronized.</description>
+		</itemtype>
+		
+		<itemtype code="CMSSite" autocreate="false" generate="false">
+            <description>Extends existing type with additional attributes.</description>
+            <attributes>
+                <attribute qualifier="storeMessageBundleName" type="java.lang.String">
+                    <description>Store Message Bundle - that will be used for the multi-country sites.</description>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="defaultCategoryCatalog" type="Catalog">
+					<description>Default category catalog active for the navigation.</description>
+					<persistence type="property" />
+					<modifiers optional="true"/>
+				</attribute>
+            </attributes>
+        </itemtype>
+		
+		<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
+			<description>Extends the solr indexed property to indicate if a value is dependent on a category catalog</description>
+			<attributes>
+				<attribute qualifier="categoryCatalogDependent" type="boolean">
+					<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+					<persistence type="property" />
+					<modifiers optional="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- Deprecated - moved to multicountrylegacy -->
+		<!-- 
+			BaseStoreVoucherRestriction
+			PromotionTimeRestriction
+		-->
+		
+		
+		<itemtype code="AbstractAsSearchProfile" autocreate="false" generate="false">
+			<description>Add to AbstractAsSearchProfile basestore</description>
+			<attributes>
+				<attribute qualifier="baseStore" type="BaseStore">
+					<persistence type="property" />
+					<modifiers optional="true" initial="true" read="true" write="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		
+	</itemtypes>
+</items>

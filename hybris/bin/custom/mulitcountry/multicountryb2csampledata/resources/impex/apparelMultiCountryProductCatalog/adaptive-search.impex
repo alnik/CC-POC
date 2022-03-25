@@ -1,0 +1,29 @@
+
+
+
+
+
+INSERT_UPDATE AsSearchProfileActivationSet ; indexType[unique=true] 		 ; catalogVersion(catalog(id),version)[unique=true]
+                                           ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged                    
+
+INSERT_UPDATE AsCategoryAwareSearchProfile ; code[unique=true] 				; name[lang=en]                          ; indexType[unique=true]          ; catalogVersion(catalog(id),version)[unique=true] ; activationSet(catalogVersion(catalog(id),version),indexType)              ; basestore(uid)	  ; activationSetPOS
+                                           ; defaultMulticountryApparelBe   ; Default Search Profile for apparel be  ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged         ; apparelMultiCountryProductCatalog:Staged:apparelMultiCountryProductType   ; multicountry-be  ;  0               
+    
+INSERT_UPDATE AsCategoryAwareSearchProfile ; code[unique=true] 				; name[lang=en]                          ; indexType[unique=true]          ; catalogVersion(catalog(id),version)[unique=true] ; activationSet(catalogVersion(catalog(id),version),indexType)              ; basestore(uid)	  ; activationSetPOS
+                                           ; defaultMulticountryApparelDe   ; Default Search Profile for apparel de  ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged         ; apparelMultiCountryProductCatalog:Staged:apparelMultiCountryProductType   ; multicountry-de  ;  0               
+     
+INSERT_UPDATE AsCategoryAwareSearchProfile ; code[unique=true] 				; name[lang=en]                          ; indexType[unique=true]          ; catalogVersion(catalog(id),version)[unique=true] ; activationSet(catalogVersion(catalog(id),version),indexType)              ; basestore(uid)	  ; activationSetPOS
+                                           ; defaultMulticountryApparelEs   ; Default Search Profile for apparel es  ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged         ; apparelMultiCountryProductCatalog:Staged:apparelMultiCountryProductType   ; multicountry-es  ;  0               
+     
+INSERT_UPDATE AsCategoryAwareSearchProfile ; code[unique=true] 				; name[lang=en]                          ; indexType[unique=true]          ; catalogVersion(catalog(id),version)[unique=true] ; activationSet(catalogVersion(catalog(id),version),indexType)              ; basestore(uid)	  ; activationSetPOS
+                                           ; defaultMulticountryApparelFr   ; Default Search Profile for apparel fr  ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged         ; apparelMultiCountryProductCatalog:Staged:apparelMultiCountryProductType   ; multicountry-fr  ;  0               
+          
+INSERT_UPDATE AsCategoryAwareSearchProfile ; code[unique=true] 				; name[lang=en]                          ; indexType[unique=true]          ; catalogVersion(catalog(id),version)[unique=true] ; activationSet(catalogVersion(catalog(id),version),indexType)              ; basestore(uid)	  ; activationSetPOS
+                                           ; defaultMulticountryApparelIt   ; Default Search Profile for apparel it  ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged         ; apparelMultiCountryProductCatalog:Staged:apparelMultiCountryProductType   ; multicountry-it  ;  0               
+     
+INSERT_UPDATE AsCategoryAwareSearchProfile ; code[unique=true] 				; name[lang=en]                          ; indexType[unique=true]          ; catalogVersion(catalog(id),version)[unique=true] ; activationSet(catalogVersion(catalog(id),version),indexType)              ; basestore(uid)	  ; activationSetPOS
+                                           ; defaultMulticountryApparelUk   ; Default Search Profile for apparel uk  ; apparelMultiCountryProductType  ; apparelMultiCountryProductCatalog:Staged         ; apparelMultiCountryProductCatalog:Staged:apparelMultiCountryProductType   ; multicountry-uk  ;  0               
+     
+                  
+
+     

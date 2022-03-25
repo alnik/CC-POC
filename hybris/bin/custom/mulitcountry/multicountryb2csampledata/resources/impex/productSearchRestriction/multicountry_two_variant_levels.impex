@@ -1,0 +1,144 @@
+# Search Restrictions
+#if Frontend_ProductBaseStoreVariant restriction is active we should deactivate Frontend_ProductBaseStore to avoid to apply the same restriction twice
+INSERT_UPDATE SearchRestriction;code[unique=true];active[default=false];generate[default=false];principal(uid);restrictedType(code);query
+;Frontend_ProductBaseStore;false;false;customergroup;Product;"
+?session.availabilityGroups = 1111111111111 OR
+EXISTS ({{
+	SELECT {pk} FROM {ProductAvailabilityAssignment as paa 
+				JOIN ProductAvailabilityGroup as pag ON {paa:availabilityGroup} = {pag:pk}
+	}
+	WHERE {item:pk} = {paa.product}  
+	  AND {pag:pk} IN (?session.availabilityGroups)
+}})"
+;Frontend_ProductAvailabilityAssignmentApproved;true;false;customergroup;ProductAvailabilityAssignment;"
+ 	{status} = __ARTICLE_APPROVAL_STATUS__
+"
+;Frontend_ProductAvailabilityAssignmentOnline;true;false;customergroup;ProductAvailabilityAssignment;"
+ 	( {onlineDate} IS NULL OR {onlineDate} <= (?session.user.currentDate)) AND ( {offlineDate} IS NULL OR {offlineDate} >= (?session.user.currentDate))
+"
+;Backend_BaseStore;true;false;employeegroup;BaseStore;"
+EXISTS ({{
+	SELECT {pk} FROM {Employee2BaseStoreRel} 
+	WHERE {target}={item:pk} 
+	  AND {source}=(?session.user)
+}})
+OR 
+NOT EXISTS ({{
+	SELECT {pk} FROM {Employee2BaseStoreRel} 
+	WHERE {source}=(?session.user)
+}})
+"
+;Backend_CMSSites;true;false;employeegroup;CMSSite;"
+EXISTS ({{
+	SELECT {pk} FROM {Employee2BaseStoreRel as ebs JOIN StoresForCMSSite as ss ON {ebs.target} ={ss.target}  } 
+	WHERE {ss.source}={item:pk} 
+	  AND {ebs.source}=(?session.user)
+}}) OR NOT EXISTS ({{
+  	SELECT {pk} FROM {Employee2BaseStoreRel as ebs}
+  	WHERE {ebs.source}=(?session.user)
+}})"
+;Backend_ProductBaseStore;false;false;employeegroup;Product;"
+(EXISTS ({{
+ 	SELECT {pk} FROM {Employee2BaseStoreRel as ebs 
+ 			 JOIN ProductAvailabilityGroup2BaseStoreRel as pag2bs ON {ebs.target}={pag2bs.target} 
+ 			 JOIN ProductAvailabilityGroup as pag ON {pag2bs:source} = {pag:pk} 
+ 			 JOIN ProductAvailabilityAssignment as paa ON {paa:availabilityGroup} = {pag:pk}			 
+	} 
+	WHERE {paa.product}={item:pk}
+	AND {ebs.source}=(?session.user)
+}}) OR NOT EXISTS ({{
+  	SELECT {pk} FROM {Employee2BaseStoreRel as ebs}
+  	WHERE {ebs.source}=(?session.user)
+}}))"
+#### TWO LEVELS OF VARIANT PRODUCTS
+;Frontend_ProductBaseStoreVariantVariant;true;false;customergroup;Product;"
+?session.availabilityGroups = 1111111111111 OR
+((NOT EXISTS({{
+	SELECT 1 FROM {ProductAvailabilityAssignment* as paa 
+			 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+	WHERE {item.pk} = {paa.product} AND {pag.pk} IN (?session.availabilityGroups)
+}}) AND 
+ 
+
+	((NOT EXISTS({{
+		SELECT 1 FROM {VariantProduct as vp 
+				 JOIN ProductAvailabilityAssignment* as paa ON {paa.product} = {vp.baseProduct}  
+				 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+		WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+	}}) AND EXISTS ({{
+		SELECT 1 FROM {VariantProduct as vp 
+				 JOIN VariantProduct as vparent ON {vparent.pk} = {vp.baseProduct}
+				 JOIN ProductAvailabilityAssignment as paa ON {paa.product} = {vparent.baseProduct}  
+				 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+		WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+	}}))
+	OR
+	( 	EXISTS ({{
+			SELECT 1 FROM {VariantProduct as vp 
+				 JOIN ProductAvailabilityAssignment as paa ON {paa.product} = {vp.baseProduct}  
+				 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+			WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+	  	}})
+	  	AND (
+	  		NOT EXISTS ({{ SELECT 1 FROM {VariantProduct as vp JOIN VariantProduct as vparent 
+	  					   ON {vparent.pk} = {vp.baseProduct}} WHERE {item.pk} = {vp.pk} }})
+	  		OR
+	  		EXISTS ({{
+		SELECT 1 FROM {VariantProduct as vp 
+				 JOIN VariantProduct as vparent ON {vparent.pk} = {vp.baseProduct}
+				 JOIN ProductAvailabilityAssignment as paa ON {paa.product} = {vparent.baseProduct}  
+				 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+		WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+			}})
+	  	)
+	))
+
+
+)
+OR
+( 	EXISTS ({{
+		SELECT 1 FROM {ProductAvailabilityAssignment as paa 
+				 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+		WHERE {item.pk} = {paa.product} AND {pag.pk} IN (?session.availabilityGroups)
+  	}})
+  	AND (
+  		NOT EXISTS ({{ SELECT 1 FROM {VariantProduct as vp} WHERE {item.pk} = {vp.pk} }})
+  		OR
+  		
+
+		((NOT EXISTS({{
+			SELECT 1 FROM {VariantProduct as vp 
+					 JOIN ProductAvailabilityAssignment* as paa ON {paa.product} = {vp.baseProduct}  
+					 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+			WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+		}}) AND EXISTS ({{
+			SELECT 1 FROM {VariantProduct as vp 
+					 JOIN VariantProduct as vparent ON {vparent.pk} = {vp.baseProduct}
+					 JOIN ProductAvailabilityAssignment as paa ON {paa.product} = {vparent.baseProduct}  
+					 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+			WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+		}}))
+		OR
+		( 	EXISTS ({{
+				SELECT 1 FROM {VariantProduct as vp 
+					 JOIN ProductAvailabilityAssignment as paa ON {paa.product} = {vp.baseProduct}  
+					 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+				WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+		  	}})
+		  	AND (
+		  		NOT EXISTS ({{ SELECT 1 FROM {VariantProduct as vp JOIN VariantProduct as vparent 
+		  					   ON {vparent.pk} = {vp.baseProduct}} WHERE {item.pk} = {vp.pk} }})
+		  		OR
+		  		EXISTS ({{
+			SELECT 1 FROM {VariantProduct as vp 
+					 JOIN VariantProduct as vparent ON {vparent.pk} = {vp.baseProduct}
+					 JOIN ProductAvailabilityAssignment as paa ON {paa.product} = {vparent.baseProduct}  
+					 JOIN ProductAvailabilityGroup as pag ON {paa.availabilityGroup} = {pag.pk}}
+			WHERE {item.pk} = {vp.pk} AND {pag.pk} IN (?session.availabilityGroups)
+				}})
+		  	)
+		))
+
+
+  	)
+))"

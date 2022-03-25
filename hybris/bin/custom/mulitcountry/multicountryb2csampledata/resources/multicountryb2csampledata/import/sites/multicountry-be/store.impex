@@ -1,0 +1,25 @@
+#
+# Create the Multicountry store BE
+#
+  
+$storePrefix=multicountry-be
+  
+$productCatalog=apparelMultiCountryProductCatalog
+$net=false
+$storeUid=multicountry-be
+$checkoutFlowGroup=responsiveCheckoutGroup
+
+INSERT_UPDATE PromotionGroup;Identifier[unique=true];
+;apparelMultiCountryPromoGrp;
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];country(isocode);name[lang=en];checkoutFlowGroup;
+;$storeUid;BE;Apparel MultiCountry Belgium;$checkoutFlowGroup;
+
+INSERT_UPDATE BaseStore2DeliveryModeRel;source(uid)[unique=true];target(code)[unique=true]
+;multicountry-be;premium-net
+;multicountry-be;standard-net
+;multicountry-be;premium-gross
+;multicountry-be;standard-gross
+;multicountry-be;pickup
+;multicountry-be;free-standard-shipping

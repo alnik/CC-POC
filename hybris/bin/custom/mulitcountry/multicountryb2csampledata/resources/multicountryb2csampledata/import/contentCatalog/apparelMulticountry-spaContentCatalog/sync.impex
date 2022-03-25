@@ -1,0 +1,16 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
+# The files in this addon are licensed under the Apache Software License, v. 2 
+# except as noted otherwise in the LICENSE file.
+# -----------------------------------------------------------------------
+#
+$contentCatalog=apparelMultiCountry-spaContentCatalog
+$syncJob=sync $contentCatalog:Staged->Online
+###### Sync apparelUKContentCatalog:staged to spaContentCatalog:staged ######
+$sourceContentCV=sourceVersion(catalog(id[default=$contentCatalog]),version[default='Staged'])[unique=true,default='$contentCatalog:Staged']
+$targetContentCV=targetVersion(catalog(id[default=$contentCatalog]),version[default='Online'])[unique=true,default='$spaContentCatalog:Staged']
+
+INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];$sourceContentCV;$targetContentCV;syncPrincipals(uid)[mode=append];syncPrincipalsOnly[default=false];removeMissingItems;createNewItems;rootTypes(code)[mode=append]
+                                   ;$syncJob;;;cmsmanagergroup;;true;true;CMSItem,CMSRelation,Media,MediaContainer

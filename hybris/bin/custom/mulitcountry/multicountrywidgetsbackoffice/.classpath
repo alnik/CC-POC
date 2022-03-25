@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" kind="src" path="/backofficesolrsearch"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry exported="true" kind="lib" path="resources/backoffice/multicountrywidgetsbackoffice_bof.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cockpit"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="gensrc"/>
+	<classpathentry exported="true" kind="src" path="/npmancillary"/>
+	<classpathentry kind="src" output="eclipsebin/backoffice/classes" path="backoffice/src"/>
+	<classpathentry exported="true" kind="src" path="/adaptivesearchbackoffice"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/platform"/>
+	<classpathentry exported="true" kind="src" path="/backoffice"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pcmbackoffice"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/multicountry"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adaptivesearchsolr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commerceservices"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commercesearchbackoffice"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

@@ -1,0 +1,13 @@
+#
+# Add additional sample solr index configuration for the category catalog for Italy
+#
+$categoryCatalogIT=apparelMultiCountryCategoryCatalogIT
+$facetSearchConfigName=apparelMultiCountryIndex
+
+INSERT_UPDATE SolrFacetSearchConfig2CatalogVersionRelation;source(name)[unique=true];target(catalog(id),version)[unique=true]
+;$facetSearchConfigName;$categoryCatalogIT:Online
+
+INSERT_UPDATE SolrFacetSearchConfig2LanguageRelation;source(name)[unique=true];target(isocode)[unique=true]
+;$facetSearchConfigName;it
+
+

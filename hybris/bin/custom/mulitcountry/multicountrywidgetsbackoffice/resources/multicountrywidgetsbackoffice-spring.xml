@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Adaptive Search -->
+    <bean id="multiCountrySolrAsSearchProvider" class="com.hybris.multicountry.adaptivesearch.MultiCountrySolrAsSearchProvider" parent="defaultSolrAsSearchProvider">
+        <property name="multicountryRestrictionService" ref="multicountryRestrictionService" />
+    </bean>
+
+
+	<alias name="multiCountryAsSearchProviderFactory" alias="asSearchProviderFactory" />
+	<bean id="multiCountryAsSearchProviderFactory" class="com.hybris.multicountry.adaptivesearch.strategies.impl.MultiCountryAsSearchProviderFactory" />
+
+	<alias name="multiCountryAsSolrAsCategoryPathResolver" alias="solrAsCategoryPathResolver" />
+	<bean id="multiCountryAsSolrAsCategoryPathResolver" class="com.hybris.multicountry.adaptivesearch.strategies.impl.MultiCountryAsSolrAsCategoryPathResolver"
+		  parent="defaultSolrAsCategoryPathResolver"/>
+
+	<!-- Excel Translator -->
+	<alias name="defaultExcelMulticountryAvailabilityTypeTranslator" alias="excelMulticountryAvailabilityTypeTranslator"/>
+	<bean id="defaultExcelMulticountryAvailabilityTypeTranslator"
+		  class="com.hybris.multicountry.excel.translators.ExcelMulticountryAvailabilityTypeTranslator" parent="abstractExcelValueTranslator">
+		<property name="order" value="5000"/>
+		<property name="validators" ref="excelMulticountryAvailabilityValidators"/>
+		<property name="excelDateUtils" ref="excelDateUtils"/>
+	</bean>
+
+	<bean depends-on="defaultExcelTranslators" parent="listMergeDirective">
+		<property name="add" ref="excelMulticountryAvailabilityTypeTranslator" />
+	</bean>
+
+
+	<!-- Excel Validator -->
+	<alias name="defaultExcelMulticountryAvailabilityValidator" alias="excelMulticountryAvailabilityValidator"/>
+	<bean id="defaultExcelMulticountryAvailabilityValidator"
+		  class="com.hybris.multicountry.excel.validators.ExcelMulticountryAvailabilityValidator">
+		<property name="enumerationService" ref="enumerationService"/>
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="excelDateUtils" ref="excelDateUtils"/>
+	</bean>
+
+	<alias name="defaultExcelMulticountryAvailabilityValidators" alias="excelMulticountryAvailabilityValidators"/>
+	<util:list id="defaultExcelMulticountryAvailabilityValidators"
+			   value-type="com.hybris.backoffice.excel.validators.ExcelValidator">
+		<ref bean="excelMulticountryAvailabilityValidator"/>
+	</util:list>
+
+</beans>

@@ -1,0 +1,65 @@
+# 
+# ImpEx for Apparel Multi country CMS Content for Italy
+# Mainly adds a new navigation tree (very simple one) only for the multicountry-it website
+# 
+# root 
+# ├── Other (Category:IT003)
+# ├── Men (Category:IT001)
+# │   ├── Men Clothing (Category:IT001001)
+# │   └── Men Shoes (Category:IT001002)
+# └── Women (Category:IT002)
+#     ├── Women Clothing (Category:IT002001)
+#     └── Women Shoes (Category:IT002002)
+# 
+$contentCatalog=apparelMultiCountryContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+ 
+$productCatalog=apparelMultiCountryProductCatalog 
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+
+$categoryCatalogIT=apparelMultiCountryCategoryCatalogIT
+$categoryCVIT=catalogVersion(catalog(id[default=$categoryCatalogIT]),version[default='Staged'])[unique=true,default=$categoryCatalogIT:Staged]
+
+$lang=it
+
+# CMS Site Settings 
+UPDATE CMSSite;uid[unique=true];defaultPreviewCategory(code, $categoryCVIT);defaultPreviewProduct(code, $productCV);;;;;
+;multicountry-it;IT003;300441142;;;;;
+ 
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;linkName[lang=$lang];linkName[lang=en];url;category(code, $categoryCVIT);target(code)[default='sameWindow'];;
+;;MenAllLinkIT;"Men's All Articles IT";"Uomini";"Men";;IT001;;;
+;;MenLinkIT;"Men's All Other Articles IT";"Uomini Diversi";"Men Various";;IT001001;;;
+;;MenShoesLinkIT;"Men's Shoes IT";"Uomini Scarpe";"Men Shoes";;IT001002;;;
+;;WomenAllLinkIT;"Women's All Articles IT";"Donne";"Women";;IT002;;;
+;;WomenLinkIT;"Women's All Other Articles IT";"Donne Diversi";"Women Various";;IT002001;;;
+;;WomenShoesLinkIT;"Women's Shoes IT";"Donne Scarpe";"Women Shoes";;IT002002;;;
+;;OthersAllLinkIT;"Others Link (all)";"Altri (Tutti)";"Others (All)";;IT003;;;
+;;OthersLinkIT;"Others Link";"Altri";"Others";;IT003;;;
+
+# Navigation Bar Component
+INSERT_UPDATE NavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);&componentRef
+;;NavBarComponentIT;Navigation Bar Collection Component Italy;MenBarComponentIT,WomenBarComponentIT,OthersBarComponentIT;NavBarComponentIT
+
+INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;link(uid, $contentCV);styleClass;navigationNode(uid,$contentCV);dropDownLayout(code)[default='AUTO']
+;;MenBarComponentIT;Men Bar Component Italy;10;MenAllLinkIT;;MenNavNodeIT;
+;;WomenBarComponentIT;Women Bar Component Italy;10;WomenAllLinkIT;;WomenNavNodeIT;
+;;OthersBarComponentIT;Others Bar Component Italy;10;OthersAllLinkIT;;OtherNavNodeIT;
+ 
+# CMS Navigation Nodes
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=$lang];title[lang=en];parent(uid, $contentCV);children(uid,$contentCV);links(uid, $contentCV);&nodeRef
+;MenNavNodeIT;;Men Nav Node Italy;"Uomini (Nav)";"Men (Nav)";ApparelMultiCountryNavNode;;;MenNavNodeIT
+;WomenNavNodeIT;;Women Nav Node Italy;"Donne (Nav)";"Women (Nav)";ApparelMultiCountryNavNode;;;WomenNavNodeIT
+;OtherNavNodeIT;;Other Nav Node Italy;"Altri (Nav)";"Other (Nav)";ApparelMultiCountryNavNode;;;OtherNavNodeIT
+;LinksMenNavNodeIT;;Men Nav Node Italy Links ;"Uomini (Nav)";"Men (Nav)";MenNavNodeIT;;MenLinkIT,MenShoesLinkIT;LinksMenNavNodeIT
+;LinksWomenNavNodeIT;;Women Nav Node Italy Links;"Donne (Nav)";"Women (Nav)";WomenNavNodeIT;;WomenLinkIT,WomenShoesLinkIT;LinksWomenNavNodeIT
+;LinksOtherNavNodeIT;;Other Nav Node Italy Links;"Altri (Nav)";"Other (Nav)";OtherNavNodeIT;;OthersLinkIT;LinksOtherNavNodeIT
+
+# Associate Component to ContentSlot 
+INSERT_UPDATE ElementsForSlot;source(uid,$contentCV)[unique=true];target(uid,$contentCV)[unique=true];
+;NavigationBarSlot;NavBarComponentIT
+
+INSERT_UPDATE CMSBaseStoreTimeRestriction;uid[unique=true];$contentCV[unique=true];name;description;passIfStoreDoesntMatch;baseStores(uid);components(uid, $contentCV)
+;ITBaseStoreRestriction;;Restriction for Multicountry IT Basestore;This makes the component only be visible for Italy;false;multicountry-it;NavBarComponentIT
+
+INSERT_UPDATE CMSInverseRestriction;uid[unique=true];$contentCV[unique=true];name;description;originalRestriction(uid, $contentCV);components(uid, $contentCV)
+;ITReverseBaseStoreRestriction;;Reverse Restriction for Multicountry Basestore (All but IT);This makes the component visible to every site but Italy;ITBaseStoreRestriction;NavBarComponent

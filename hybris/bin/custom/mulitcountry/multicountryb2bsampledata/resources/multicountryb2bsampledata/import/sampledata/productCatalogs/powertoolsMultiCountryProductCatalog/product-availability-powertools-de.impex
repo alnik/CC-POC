@@ -1,0 +1,11 @@
+# ImpEx for Importing Product availability for Italy
+ 
+# Macros / Replacement Parameter definitions
+$productCatalog=powertoolsMultiCountryProductCatalog
+$availabilityGroup=powertools-de-availability
+$approvalStatus=approved
+ 
+$catalogVersion=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+INSERT_UPDATE ProductAvailabilityAssignment;product(code,$catalogVersion)[unique=true];availabilityGroup(id)[default=$availabilityGroup,unique=true];status(code)[default=$approvalStatus];onlineDate[dateformat=dd.MM.yyyy, default=01.02.2014];offlineDate[dateformat=dd.MM.yyyy];$catalogVersion
+;2116277
+;2116279

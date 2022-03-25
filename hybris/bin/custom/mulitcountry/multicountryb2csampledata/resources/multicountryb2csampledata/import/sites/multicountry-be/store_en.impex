@@ -1,0 +1,12 @@
+#
+# Import the Apparel MultiCountry Belgium BaseStore
+#
+# ENGLISH LOCALIZATION
+#
+ 
+$lang=en
+ 
+$storeUid=multicountry-be
+ 
+UPDATE BaseStore;uid[unique=true];name[lang=$lang]
+;$storeUid;"Apparel MultiCountry Belgium"

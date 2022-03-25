@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<action-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   id="de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction"
+                   xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/action-definition.xsd">
+    <name>Product Lock Action</name>
+    <description>Action for locking a product.</description>
+    <author>hybris</author>
+    <version>1.0</version>
+
+    <sockets>
+        <output id="outputRefreshContext" type="com.hybris.cockpitng.search.data.pageable.Pageable" visibility="internal"/>
+		<output id="selectedItem" type="[T]" />
+    </sockets>
+    
+    <iconUri>icons/icon_action_product_lock_default.png</iconUri>
+    <iconHoverUri>icons/icon_action_product_lock_hover.png</iconHoverUri>
+    <iconDisabledUri>icons/icon_action_product_lock_disabled.png</iconDisabledUri>
+    <actionClassName>de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction</actionClassName>
+</action-definition>
