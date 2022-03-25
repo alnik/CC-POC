@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widgets.xsd">
+
+	 <import resource="multicountrywidgetsbackoffice-backoffice-widgets-internal.xml"/>
+
+    <widget-extension widgetId="backofficeMainSlot">
+
+    </widget-extension>
+
+
+
+    <widget-connection inputId="input" outputId="nodeSelected" sourceWidgetId="multicountrybackoffice-explorer-tree" targetWidgetId="multicountrybackoffice-tree-node-adapter"/>
+    <widget-connection inputId="genericInput" outputId="true" sourceWidgetId="multicountrybackoffice-tree-node-adapter" targetWidgetId="multicountrybackoffice-typecode-extractor"/>
+    <widget-connection inputId="genericInput" outputId="true" sourceWidgetId="multicountrybackoffice-tree-node-adapter" targetWidgetId="multicountrybackoffice-search-enabler"/>
+    <widget-connection inputId="genericInput" outputId="false" sourceWidgetId="multicountrybackoffice-tree-node-adapter" targetWidgetId="multicountrybackoffice-search-disabler"/>
+    <widget-connection inputId="type" outputId="genericOutput" sourceWidgetId="multicountrybackoffice-typecode-extractor" targetWidgetId="multicountrybackoffice-search-logic"/>
+    <widget-connection inputId="enabled" outputId="genericOutput" sourceWidgetId="multicountrybackoffice-search-enabler" targetWidgetId="multicountrybackoffice-text-search"/>
+    <widget-connection inputId="enabled" outputId="genericOutput" sourceWidgetId="multicountrybackoffice-search-disabler" targetWidgetId="multicountrybackoffice-text-search"/>
+    <widget-connection inputId="searchtext" outputId="query" sourceWidgetId="multicountrybackoffice-text-search" targetWidgetId="multicountrybackoffice-search-logic"/>
+    <widget-connection inputId="pageable" outputId="pageable" sourceWidgetId="multicountrybackoffice-search-logic" targetWidgetId="multicountrybackoffice-simple-list"/>
+
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" outputId="outputRefreshContext"
+	                   targetWidgetId="pcmbackoffice-collectionBrowser-browser" inputId="pageable"/>
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" outputId="selectedItem"
+					   targetWidgetId="pcmbackoffice-editorArea-area" inputId="inputObject" />
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" outputId="selectedItem"
+					   targetWidgetId="pcmbackoffice-editorarea-summaryview" inputId="inputObject" />
+		<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" outputId="outputRefreshContext"
+	                   targetWidgetId="pcmbackoffice-collectionBrowser-browser" inputId="pageable"/>
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" outputId="selectedItem"
+					   targetWidgetId="pcmbackoffice-editorArea-area" inputId="inputObject" />
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" outputId="selectedItem"
+					   targetWidgetId="pcmbackoffice-editorarea-summaryview" inputId="inputObject" />
+
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductLockAction" outputId="selectedItem"
+					   targetWidgetId="editorArea" inputId="inputObject" />
+	<widget-connection sourceWidgetId="STUB_de.hybris.multicountry.backoffice.widgets.actions.ProductUnlockAction" outputId="selectedItem"
+					   targetWidgetId="editorArea" inputId="inputObject" />
+
+				   
+	
+	 <widget-connection sourceWidgetId="STUB_de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor" outputId="referenceEditorOutput" targetWidgetId="configurableFlow" inputId="context"/>
+     <widget-connection sourceWidgetId="STUB_de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor" outputId="referenceSelected" targetWidgetId="collectionEditorAreaGroup" inputId="inputDataInput"/>
+     <widget-connection sourceWidgetId="STUB_de.hybris.cockpitng.editor.multicountryextendedmultireferenceeditor" outputId="referenceSearchCtx" targetWidgetId="referenceadvancedsearchgroup" inputId="referenceSearchCtx"/>
+	
+	<widget-connection sourceWidgetId="asNavigationContext" outputId="collapseState" targetWidgetId="asLeftContainer" inputId="collapseState" />
+	<widget-connection sourceWidgetId="asNavigationContext" outputId="navigationContext" targetWidgetId="asCategorySelector" inputId="navigationContext" />
+	<widget-connection sourceWidgetId="asCategorySelector" outputId="selectedCategory" targetWidgetId="asNavigationContext" inputId="category" />
+	<widget-connection sourceWidgetId="asNavigationContext" outputId="navigationContext" targetWidgetId="asMainController" inputId="navigationContext" />
+	<widget-connection sourceWidgetId="asNavigationContext" outputId="navigationContext" targetWidgetId="asSearchContext" inputId="navigationContext" />
+	
+	
+	 
+	
+
+	
+		   
+</widgets>

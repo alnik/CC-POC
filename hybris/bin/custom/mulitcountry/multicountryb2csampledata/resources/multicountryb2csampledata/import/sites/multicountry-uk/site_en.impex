@@ -1,0 +1,9 @@
+#
+# Import the CMS Site configuration for the UK store
+#
+# ENGLISH LOCALIZATION
+#
+$lang=en
+ 
+UPDATE CMSSite;uid[unique=true];name[lang=$lang];locale[lang=$lang]
+;multicountry-uk;"Apparel UK (MC)";en_gb

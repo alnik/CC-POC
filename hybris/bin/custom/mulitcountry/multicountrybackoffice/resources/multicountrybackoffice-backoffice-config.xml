@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns="http://www.hybris.com/cockpit/config"
+		xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+		xmlns:list-view="http://www.hybris.com/cockpitng/component/listView"
+		xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea"
+		xmlns:explorer-tree="http://www.hybris.com/cockpitng/config/explorertree">
+
+	<!-- Add timezones to the explorer tree under Internationaliztion -->
+	<context component="explorer-tree" merge-by="module">
+		<explorer-tree:explorer-tree>
+			<explorer-tree:navigation-node id="hmc_treenode_c2l">
+				<explorer-tree:type-node id="Timezones" code="TimezoneEnum" position="20"/>
+			</explorer-tree:navigation-node>
+			<explorer-tree:navigation-node id="hmc_treenode_catalog"  merge-mode="append">
+				<explorer-tree:type-node id="ProductAvailabilityAssignment" code="ProductAvailabilityAssignment" position="21"/>
+			</explorer-tree:navigation-node>
+		</explorer-tree:explorer-tree>
+	</context>
+
+	<!-- Editor view for the lockedBy attribute -->
+	<context merge-by="type" parent="GenericItem" type="User" component="lockedByListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="uid" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Editor view for the availability attribute -->
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityAssignment" component="availabilityListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="availabilityGroup.id" />
+			<list-view:column qualifier="status" />
+			<list-view:column qualifier="onlineDate" />
+			<list-view:column qualifier="offlineDate" />
+		</list-view:list-view>
+	</context>
+
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityAssignment" component="listview">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="availabilityGroup.id" />
+			<list-view:column qualifier="product" />
+			<list-view:column qualifier="status" />
+			<list-view:column qualifier="onlineDate" />
+			<list-view:column qualifier="offlineDate" />
+			<list-view:column qualifier="catalogVersion" />
+		</list-view:list-view>
+	</context>
+
+	<context  type="ProductAvailabilityAssignment" component="base">
+	<y:base xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+		<y:labels>
+			 <y:label>'[' +availabilityGroup.id+ '] Product [' +product.code+ '] Catalog [' +catalogVersion.catalog.id+ '] [' +catalogVersion.version+']'</y:label>
+		</y:labels>
+	</y:base>
+	</context>
+
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityAssignment" component="simple-search">
+		<simple-search:simple-search xmlns:simple-search="http://www.hybris.com/cockpitng/config/simplesearch">
+			<field xmlns="http://www.hybris.com/cockpitng/config/simplesearch" name="product.code"/>
+		</simple-search:simple-search>
+	</context>
+
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityAssignment" component="advanced-search">
+		<as:advanced-search xmlns:as="http://www.hybris.com/cockpitng/config/advancedsearch" connection-operator="AND">
+			<as:field-list >
+				<as:field name="product" selected="true" operator="in"/>
+				<as:field name="product.code" selected="true" />
+				<as:field name="product.name" selected="true" />
+				<as:field name="availabilityGroup" selected="true"/>
+				<as:field name="catalogVersion" selected="true"/>
+				<as:field name="status" selected="true"/>
+				<as:field name="offlineDate" selected="true">
+					<as:editor-parameter>
+						<as:name>equalsComparesExactDate</as:name>
+						<as:value>true</as:value>
+					</as:editor-parameter>
+				</as:field>
+				<as:field name="onlineDate" selected="true">
+					<as:editor-parameter>
+						<as:name>equalsComparesExactDate</as:name>
+						<as:value>true</as:value>
+					</as:editor-parameter>
+				</as:field>
+			</as:field-list>
+		</as:advanced-search>
+	</context>
+
+	<!-- Editor view for the lockedBy attribute -->
+	<context merge-by="type" parent="GenericItem" type="Employee" component="baseStoreEmployeeListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="uid" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+
+
+	<context merge-by="type" parent="GenericItem" type="ProductAvailabilityGroup" component="baseStoreAvailabilityGroupsListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="id" />
+			<list-view:column qualifier="description" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Editor view for the employee managedStores attribute -->
+	<context merge-by="type" parent="GenericItem" type="BaseStore" component="employeeStoreListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="uid" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Update the base store view to add a multicountry tab -->
+	<context merge-by="type" parent="GenericItem" type="BaseStore" component="editor-area">
+		<editorArea:editorArea name="">
+			<editorArea:tab name="hmc.tab.basestore.multicountry">
+				<editorArea:section name="hmc.basestore.section.multicountry">
+					<editorArea:attribute qualifier="country" readonly="true"/>
+					<editorArea:attribute qualifier="userPriceGroup"/>
+					<editorArea:attribute qualifier="userDiscountGroup"/>
+					<editorArea:attribute qualifier="taxGroup" readonly="true"/>
+					<editorArea:attribute qualifier="timezone" readonly="true"/>
+					<editorArea:attribute qualifier="availabilityGroups" description="hmc.text.basestore.multicountry.availabilityGroups" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+						<editorArea:editor-parameter>
+							<editorArea:name>listConfigContext</editorArea:name>
+							<editorArea:value>baseStoreAvailabilityGroupsListView</editorArea:value>
+						</editorArea:editor-parameter>
+						<editorArea:editor-parameter>
+							<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+							<editorArea:value>create-wizard-no-save</editorArea:value>
+						</editorArea:editor-parameter>
+					</editorArea:attribute>
+				</editorArea:section>
+				<editorArea:section name="hmc.basestore.section.employee">
+					<editorArea:panel name="panel.lockedBy">
+						<editorArea:attribute qualifier="employees" description="hmc.text.basestore.multicountry.employees" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>baseStoreEmployeeListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+
+	<!-- Editor view for the employee lockedProducts attribute -->
+	<context merge-by="type" parent="GenericItem" type="Product" component="employeeLockedProductsListView">
+		<list-view:list-view xmlns:list-view="http://www.hybris.com/cockpitng/component/listView">
+			<list-view:column qualifier="code" />
+			<list-view:column qualifier="name" />
+		</list-view:list-view>
+	</context>
+
+	<!-- Update the employee view to add a multicountry data -->
+	<context merge-by="type" parent="User" type="Employee" component="editor-area">
+		<editorArea:editorArea name="">
+			<editorArea:tab name="hmc.tab.employee.multicountry">
+				<editorArea:section name="hmc.properties">
+					<editorArea:panel name="panel.managedStores">
+						<editorArea:attribute qualifier="managedStores" description="hmc.text.employee.multicountry.managedStores" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>employeeStoreListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+
+					<editorArea:panel name="panel.lockedProducts">
+						<editorArea:attribute qualifier="lockedProducts" description="hmc.text.employee.multicountry.lockedProducts" editor="com.hybris.cockpitng.editor.extendedmultireferenceeditor">
+							<editorArea:editor-parameter>
+								<editorArea:name>listConfigContext</editorArea:name>
+								<editorArea:value>employeeLockedProductsListView</editorArea:value>
+							</editorArea:editor-parameter>
+							<editorArea:editor-parameter>
+								<editorArea:name>configurableFlowConfigCtx</editorArea:name>
+								<editorArea:value>create-wizard-no-save</editorArea:value>
+							</editorArea:editor-parameter>
+						</editorArea:attribute>
+					</editorArea:panel>
+				</editorArea:section>
+			</editorArea:tab>
+		</editorArea:editorArea>
+	</context>
+
+
+</config>

@@ -1,0 +1,5 @@
+INSERT_UPDATE CmsPageType;code[unique=true];restrictionTypes(code)[mode=append]
+;CatalogPage;CMSBaseStoreTimeRestriction
+;CategoryPage;CMSBaseStoreTimeRestriction
+;ContentPage;CMSBaseStoreTimeRestriction
+;ProductPage;CMSBaseStoreTimeRestriction

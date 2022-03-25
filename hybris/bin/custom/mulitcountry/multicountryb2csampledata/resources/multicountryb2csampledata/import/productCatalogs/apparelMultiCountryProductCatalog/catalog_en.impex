@@ -1,0 +1,12 @@
+#
+# Import the Apparel Product Catalog
+#
+
+# Language
+$lang=en
+
+
+# Create Catalog
+UPDATE Catalog;id[unique=true];name[lang=$lang]
+;apparelMultiCountryProductCatalog;"Apparel Multi Country Product Catalog"
+;apparelMultiCountryCategoryCatalogIT;"Apparel Multi Country Category Catalog Italy"

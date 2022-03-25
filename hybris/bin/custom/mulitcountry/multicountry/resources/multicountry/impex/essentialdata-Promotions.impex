@@ -1,0 +1,17 @@
+$lang=en
+INSERT_UPDATE RuleConditionDefinitionCategory;id[unique=true];name[lang=$lang];priority
+;multicountry;Multicountry;10
+
+INSERT_UPDATE RuleConditionDefinition;id[unique=true]         ;name[lang=$lang]    ;priority;breadcrumb[lang=$lang];allowsChildren;translatorId                    ;translatorParameters[map-delimiter=|];categories(id)[default='multicountry']                     
+                                     ;ymc_qualifying_basestore;Qualifying BaseStore;1500    ;Base store is {value};false          ;ruleBaseStoreConditionTranslator;                            
+                                     ;ymc_localtime			  ;Local Time 		   ;1100    ;Time is beetween {fromDate} and {toDate};false          ;ruleLocalTimeConditionTranslator;
+ 
+ 
+INSERT_UPDATE RuleConditionDefinitionParameter;definition(id)[unique=true]	;id[unique=true];priority;name[lang=$lang];description[lang=$lang]     ;type            		 ;value;required[default=true]
+                                              ;ymc_qualifying_basestore		;value          ;1000    ;Base store      ;BaseStore to match		   ;List(ItemType(BaseStore));
+                                              ;ymc_localtime			    ;fromDate		;1000	 ;From date       ;From date                   ;java.util.Date			 ;	   ;false
+                                              ;ymc_localtime			    ;toDate 		;1000	 ;To date         ;To date                     ;java.util.Date			 ;	   ;false
+                                              
+INSERT_UPDATE RuleConditionDefinitionRuleTypeMapping;definition(id)[unique=true];ruleType(code)[default=PromotionSourceRule][unique=true]
+;ymc_qualifying_basestore;
+;ymc_localtime;

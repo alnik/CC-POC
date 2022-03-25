@@ -1,0 +1,22 @@
+#
+# Create the Multicountry store Spain
+#
+  
+$storePrefix=multicountry-es
+  
+$productCatalog=apparelMultiCountryProductCatalog
+$net=false
+$storeUid=multicountry-es
+$checkoutFlowGroup=responsiveCheckoutGroup
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];country(isocode);name[lang=en];checkoutFlowGroup;
+;$storeUid;ES;Apparel MultiCountry Spain;$checkoutFlowGroup;
+
+INSERT_UPDATE BaseStore2DeliveryModeRel;source(uid)[unique=true];target(code)[unique=true]
+;multicountry-es;premium-net
+;multicountry-es;standard-net
+;multicountry-es;premium-gross
+;multicountry-es;standard-gross
+;multicountry-es;pickup
+;multicountry-es;free-standard-shipping

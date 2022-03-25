@@ -1,0 +1,22 @@
+#
+# Create the Multicountry store Germany
+#
+  
+$storePrefix=multicountry-de
+  
+$productCatalog=apparelMultiCountryProductCatalog
+$net=false
+$storeUid=multicountry-de
+$checkoutFlowGroup=responsiveCheckoutGroup
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];country(isocode);name[lang=en];checkoutFlowGroup;
+;$storeUid;DE;Apparel MultiCountry Germany;$checkoutFlowGroup;
+
+INSERT_UPDATE BaseStore2DeliveryModeRel;source(uid)[unique=true];target(code)[unique=true]
+;multicountry-de;premium-net
+;multicountry-de;standard-net
+;multicountry-de;premium-gross
+;multicountry-de;standard-gross
+;multicountry-de;pickup
+;multicountry-de;free-standard-shipping

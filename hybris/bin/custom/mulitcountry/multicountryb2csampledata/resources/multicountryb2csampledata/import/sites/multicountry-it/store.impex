@@ -1,0 +1,22 @@
+#
+# Create the Multicountry store BE
+#
+  
+$storePrefix=multicountry-it
+  
+$productCatalog=apparelMultiCountryProductCatalog
+$net=false
+$storeUid=multicountry-it
+$checkoutFlowGroup=responsiveCheckoutGroup
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];country(isocode);name[lang=en];checkoutFlowGroup;
+;$storeUid;IT;Apparel MultiCountry Italy;$checkoutFlowGroup
+
+INSERT_UPDATE BaseStore2DeliveryModeRel;source(uid)[unique=true];target(code)[unique=true]
+;multicountry-it;premium-net
+;multicountry-it;standard-net
+;multicountry-it;premium-gross
+;multicountry-it;standard-gross
+;multicountry-it;pickup
+;multicountry-it;free-standard-shipping

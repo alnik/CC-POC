@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<!-- 
+	<bean class="de.hybris.platform.multicountry.data.AvailabilityData">
+		<property name="groupId" type="String" />
+		<property name="status" type="String" />
+	</bean>  -->
+	
+	<bean class="de.hybris.platform.commerceservices.impersonation.ImpersonationContext">
+		<property name="productAvailabilityGroups" type="java.util.Collection&lt;de.hybris.platform.multicountry.model.productavailabilitygroup.ProductAvailabilityGroupModel>"/>
+	
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.setup.data.ImportData">
+		<property name="extraProductCatalogNames" type="java.util.List&lt;String>">
+			<description>A list of extra product catalog names to be imported.</description>
+		</property>
+	</bean>
+	
+	<bean class="de.hybris.platform.solrfacetsearch.indexer.workers.IndexerWorkerParameters">
+		<property name="SessionAvailabilityGroups" type="java.util.Collection&lt;de.hybris.platform.multicountry.model.productavailabilitygroup.ProductAvailabilityGroupModel>" />
+	</bean>
+
+
+	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedProperty">
+		<property name="categoryCatalogDependent" type="boolean"/>
+	</bean>
+	
+	<!-- New Promotion Engine -->
+	
+	<bean class="de.hybris.platform.multicountry.promotions.rao.BaseStoreRAO">    	
+    	<property name="code" type="String" />
+    	<property name="timeZone" type="String" />
+	</bean>
+	
+	<bean class="de.hybris.platform.ruleengineservices.rao.AbstractOrderRAO">    	
+    	<property name="store"     type="de.hybris.platform.multicountry.promotions.rao.BaseStoreRAO" />
+    	<!-- We use a timestamp -->
+    	<property name="localTime" type="long"/>
+	</bean>	
+</beans>
+

@@ -1,0 +1,5 @@
+INSERT_UPDATE SearchRestriction;code[unique=true];active[default=false];generate[default=false];principal(uid);restrictedType(code);query
+;Frontend_ContextualAttributeValue;false;false;customergroup;ContextualAttributeValue;"EXISTS ({{
+	SELECT {pk} FROM {ContextualAttributeValue as cav }
+	WHERE {cav:context} = (?session.contextualcontext)
+}})"

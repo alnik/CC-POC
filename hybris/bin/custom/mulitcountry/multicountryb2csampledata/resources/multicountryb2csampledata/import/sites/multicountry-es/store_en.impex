@@ -1,0 +1,12 @@
+#
+# Import the Apparel MultiCountry Spain BaseStore
+#
+# ENGLISH LOCALIZATION
+#
+ 
+$lang=en
+ 
+$storeUid=multicountry-es
+ 
+UPDATE BaseStore;uid[unique=true];name[lang=$lang]
+;$storeUid;"Apparel MultiCountry Spain"

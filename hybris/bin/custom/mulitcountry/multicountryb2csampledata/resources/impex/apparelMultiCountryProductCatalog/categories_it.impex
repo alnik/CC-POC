@@ -1,0 +1,30 @@
+# ImpEx for Importing Categories into Apparel Multi Country Store for Italy (data used by the category catalog enhancement)
+
+# Macros / Replacement Parameter definitions
+$catalogVersion=catalogVersion(catalog(id[default='apparelMultiCountryCategoryCatalogIT']),version[default='Staged'])[unique=true,default='apparelMultiCountryCategoryCatalogIT:Staged']
+$categories=target(code, $catalogVersion)[unique=true]
+$supercategories=source(code, $catalogVersion)[unique=true]
+
+# Language
+$lang=it
+
+# Create Categories
+INSERT_UPDATE Category;code[unique=true];name[lang=$lang];description[lang=$lang];$catalogVersion;allowedPrincipals(uid)[default='customergroup']
+;ITcategorie;Categorie;;;
+;IT001;Uomini;;;
+;IT002;Donne;;;
+;IT003;Altri;;;
+;IT001001;Abbigliamento Uomini;;;
+;IT001002;Altri Uomini;;;
+;IT002001;Abbigliamento Donne;;;
+;IT002002;Altri Donne;;;
+
+# Create category relations (category tree)
+INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories
+;IT001;ITcategorie;
+;IT002;ITcategorie;
+;IT003;ITcategorie;
+;IT001001;IT001;
+;IT001002;IT001;
+;IT002001;IT002;
+;IT002002;IT002;

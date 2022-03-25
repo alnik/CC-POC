@@ -1,0 +1,3 @@
+INSERT_UPDATE TimeZoneEnum;code[unique=true];name[lang=en];name[lang=de];name[lang=fr];name[lang=it];name[lang=es];
+;Europe/London;Greenwich Mean Time (GMT+0);Greenwich Zeit (GMT+0);Heure du méridien de Greenwich (GMT+0);Ora media di Greenwich (GMT+0);Hora del Meridiano de Greenwich (GMT+0);
+;CET;Central European Time (GMT+1);Mitteleuropäische Zeit (GMT+1);Heure d'Europe centrale (GMT+1);Ora dell'Europa centrale (GMT+1);Hora de Europa Central (GMT+1);

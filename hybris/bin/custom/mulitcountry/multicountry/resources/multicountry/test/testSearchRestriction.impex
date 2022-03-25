@@ -1,0 +1,37 @@
+$productCatalog=TestCatalog
+$catalogVersion=catalogVersion(catalog(id[default='$productCatalog']),version[default='TestVersion'])[unique=true,default='$productCatalog:TestVersion']
+$supercategories=supercategories( code, catalogVersion(catalog(id[default='$productCatalog']),version[default='TestVersion']))
+$baseProduct=baseProduct(code, catalogVersion(catalog(id[default='$productCatalog']),version[default='TestVersion']))
+$approved=approvalstatus(code)[default='approved']
+
+INSERT_UPDATE UserGroup;uid[unique=true]
+ ;customergroup
+ 
+UPDATE Customer;uid[unique=true];groups(uid)
+ ;anonymous;customergroup
+
+INSERT_UPDATE Unit;unitType[unique=true];code[unique=true];name[lang=en];conversion;;;
+ ;pieces;pieces;pieces;1
+
+INSERT_UPDATE Catalog;id[unique=true];
+ ;TestCatalog
+ 
+INSERT_UPDATE CatalogVersion;version[unique=true];catalog(id)[default=$productCatalog]
+ ;TestVersion;
+
+INSERT_UPDATE ApparelProduct;code[unique=true];$catalogVersion;varianttype(code);$supercategories;$approved;unit(code[default='pieces']);
+ ;TestProduct; ;ApparelStyleVariantProduct;;approved;;;; ;
+
+INSERT_UPDATE ApparelStyleVariantProduct;code[unique=true];$catalogVersion;$baseProduct;unit(code);;supercategories(code,$catalogVersion);varianttype(code);$approved;
+ ;TestProduct_1;;TestProduct;pieces;BLACK;;ApparelSizeVariantProduct
+ ;TestProduct_2;;TestProduct;pieces;BLACK;;ApparelSizeVariantProduct
+
+INSERT_UPDATE ApparelSizeVariantProduct;code[unique=true];$catalogVersion;$baseProduct;unit(code);;supercategories(code,$catalogVersion);varianttype(code);$approved;
+ ;TestProduct_2_1;;TestProduct_2;pieces;BLACK;;
+ ;TestProduct_2_2;;TestProduct_2;pieces;BLACK;;
+ ;TestProduct_1_1;;TestProduct_1;pieces;BLACK;;
+ ;TestProduct_1_2;;TestProduct_1;pieces;BLACK;;
+
+INSERT_UPDATE ProductAvailabilityGroup;id[unique=true];description[lang=en];stores(uid)
+ ;product-availability-test-1;Test Product Availability Group 1
+ ;product-availability-test-2;Test Product Availability Group 2

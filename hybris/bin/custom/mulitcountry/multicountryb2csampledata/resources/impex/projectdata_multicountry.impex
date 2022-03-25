@@ -1,0 +1,86 @@
+$productCatalog=apparelMultiCountryProductCatalog
+$categoryCatalogIT=apparelMultiCountryCategoryCatalogIT
+$net=false
+$unitedKingdom=GB,GG,IM,JE
+$stores=multicountry-it,multicountry-fr,multicountry-uk,multicountry-es,multicountry-de,multicountry-be
+$solrSearchConfig=apparelMultiCountryIndex
+
+# Added a dedicated impex rule because productmanager is created as sampledata from electronicstore/adminstore 
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode);sessionCurrency(isocode);managedStores(uid)
+;productmanager;;Product manager;Product Manager;backofficeproductmanagergroup,backofficeproductadministratorgroup;en;EUR;$stores;
+;productmanager-uk;;UK Product manager;UK Product Manager;backofficeproductmanagergroup;en;GBP;multicountry-uk;
+;productmanager-de;;DE Product manager;DE Product Manager;backofficeproductmanagergroup;de;EUR;multicountry-de;
+;productmanager-uk-de;;UK & DE Product manager;UK & DE Product Manager;backofficeproductmanagergroup;en;GBP;multicountry-uk,multicountry-de;
+
+
+
+
+
+UPDATE CatalogVersion;catalog(id)[unique=true];version[unique=true];writePrincipals(uid)[mode=append]
+;apparelMultiCountryProductCatalog;Online;productmanager-uk;
+;apparelMultiCountryProductCatalog;Staged;productmanager-uk;
+;apparelMultiCountryProductCatalog;Online;productmanager;
+;apparelMultiCountryProductCatalog;Staged;productmanager;
+;apparelMultiCountryProductCatalog;Online;backofficeproductmanagergroup;backofficeproductmanagergroup
+;apparelMultiCountryProductCatalog;Staged;backofficeproductmanagergroup;backofficeproductmanagergroup
+
+
+# UserPriceGroup
+INSERT_UPDATE UserPriceGroup;code[unique=true];name[lang=en];name[lang=it];
+;pricegroup-it;Italy Price Group;Italia Gruppo Prezzo;
+;pricegroup-fr;France Price Group;Francia Gruppo Prezzo;
+;pricegroup-uk;United Kingdom Price Group;Regno Unito Gruppo Prezzo;
+;pricegroup-es;Spain Price Group;Spagna Gruppo Prezzo;
+;pricegroup-de;Germany Price Group;Germania Gruppo Prezzo;
+;pricegroup-be;Belgium Price Group;Belgio Gruppo Prezzo;
+;pricegroup-us;United States Price Group;Stati Uniti Prezzo Group;
+
+# Tax & Tax Groups
+INSERT_UPDATE UserTaxGroup;code[unique=true]
+;de-taxes
+;jp-taxes
+;uk-taxes
+;us-taxes
+;ca-taxes
+;fr-taxes
+;be-taxes
+;it-taxes
+;es-taxes
+
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];country(isocode);name[lang=en];name[lang=it];catalogs(id);currencies(isocode);net;taxGroup(code);storelocatorDistanceUnit(code);defaultCurrency(isocode);languages(isocode);defaultLanguage(isocode);deliveryCountries(isocode);userPriceGroup(code);solrFacetSearchConfiguration(name)
+;multicountry-it;IT;Italy;Italia;$productCatalog,$categoryCatalogIT;EUR;$net;it-taxes;km;EUR;it;it;IT;pricegroup-it;$solrSearchConfig;
+;multicountry-fr;FR;France;Francia;$productCatalog;EUR;$net;fr-taxes;km;EUR;fr;fr;FR;pricegroup-fr;$solrSearchConfig;
+;multicountry-uk;GB;UK;UK;$productCatalog;GBP;$net;uk-taxes;miles;GBP;en;en;$unitedKingdom;pricegroup-uk;$solrSearchConfig;
+;multicountry-es;ES;Spain;Spagna;$productCatalog;EUR;$net;es-taxes;km;EUR;es;es;ES;pricegroup-es;$solrSearchConfig;
+;multicountry-de;DE;Germany;Germania;$productCatalog;EUR;$net;de-taxes;km;EUR;de;de;DE;pricegroup-de;$solrSearchConfig;
+;multicountry-be;BE;Belgium;Belgio;$productCatalog;EUR;$net;be-taxes;km;EUR;fr,de,nl;fr;BE;pricegroup-be;$solrSearchConfig;
+
+
+
+# ProductAvailabilityGroup
+INSERT_UPDATE ProductAvailabilityGroup;id[unique=true];description[lang=en];stores(uid)
+;UK-availability;Apparel MultiCountry Product availability Group for UK;multicountry-uk
+;DE-availability;Apparel MultiCountry Product availability Group for DE;multicountry-de
+;IT-availability;Apparel MultiCountry Product availability Group for IT;multicountry-it
+;FR-availability;Apparel MultiCountry Product availability Group for FR;multicountry-fr
+;ES-availability;Apparel MultiCountry Product availability Group for ES;multicountry-es
+;BE-availability;Apparel MultiCountry Product availability Group for BE;multicountry-be
+
+
+INSERT_UPDATE Tax;code[unique=true];value;currency(isocode)
+;de-vat-full;19
+;jp-vat-full;5
+;uk-vat-full;20
+;fr-vat-full;20
+;es-vat-full;21 
+;it-vat-full;21 
+;be-vat-full;21  	 
+
+INSERT_UPDATE CatalogVersionToRuleEngineContextMapping;context(name)[unique=true];catalogVersion(catalog(id),version)[unique=true]
+;promotions-context;apparelMultiCountryProductCatalog:Online
+;promotions-preview-context;apparelMultiCountryProductCatalog:Staged

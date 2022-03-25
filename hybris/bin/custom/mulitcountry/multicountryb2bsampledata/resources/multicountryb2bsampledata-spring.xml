@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ [y] hybris Platform
+  ~ 
+  ~ Copyright (c) 2000-2016 SAP SE
+  ~ All rights reserved.
+  ~ 
+  ~ This software is the confidential and proprietary information of SAP 
+  ~ Hybris ("Confidential Information"). You shall not disclose such 
+  ~ Confidential Information and shall use it only in accordance with the 
+  ~ terms of the license agreement you entered into with SAP Hybris.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/> 
+	
+	<alias alias="b2bAcceleratorCoreSystemSetup" name="multiCountryB2BSystemSetup" />
+	<bean id="multiCountryB2BSystemSetup" class="de.hybris.platform.multicountryb2bsampledata.setup.SampleDataSystemSetup" parent="abstractCoreSystemSetup">
+		<property name="powertoolsMultiCountryCoreDataImportService" ref="powertoolsMultiCountryCoreDataImportService"/>
+		<property name="powertoolsMultiCountrySampleDataImportService" ref="powertoolsMultiCountrySampleDataImportService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+	</bean>
+	
+	<bean id="powertoolsMultiCountryCoreDataImportService" class="de.hybris.platform.multicountryb2bsampledata.services.dataimport.impl.PowertoolsMultiCountryCoreDataImportService" 
+		parent="coreDataImportService">
+	</bean>
+	
+	<bean id="powertoolsMultiCountrySampleDataImportService" class="de.hybris.platform.multicountryb2bsampledata.services.dataimport.impl.PowertoolsMultiCountrySampleDataImportService" 
+		parent="sampleDataImportService">
+	</bean>
+	
+	<!-- Solr field value providers TEMPORARY FOR NOW SO DO NOT NEED TO DEPEND ON yb2bacceleratorcore -->
+	
+	    <bean id="powertoolsCategoryCodeValueProvider" parent="abstractCategoryCodeValueProvider">
+        <property name="categorySource" ref="powertoolsCategorySource"/>
+    </bean>
+    <bean id="powertoolsBrandCategoryCodeValueProvider" parent="abstractCategoryCodeValueProvider">
+        <property name="categorySource" ref="powertoolsBrandCategorySource"/>
+    </bean>
+    <bean id="powertoolsVariantCategoryCodeValueProvider" parent="abstractCategoryCodeValueProvider">
+        <property name="categorySource" ref="powertoolsVariantCategorySource"/>
+    </bean>
+
+
+    <bean id="powertoolsCategoryNameValueProvider" parent="abstractCategoryNameValueProvider">
+        <property name="categorySource" ref="powertoolsCategorySource"/>
+    </bean>
+    
+    <bean id="powertoolsBrandCategoryNameValueProvider" parent="abstractCategoryNameValueProvider">
+        <property name="categorySource" ref="powertoolsBrandCategorySource"/>
+    </bean>
+    
+        <bean id="powertoolsCategorySource" parent="variantCategorySource">
+        <property name="rootCategory" value="1"/> <!-- '1' is the root icecat category -->
+    </bean>
+    <bean id="powertoolsVariantCategorySource" parent="variantCategorySource"/>
+
+    <bean id="powertoolsBrandCategorySource" parent="defaultCategorySource">
+        <property name="rootCategory" value="brands"/> <!-- 'brands' is the root of the brands hierarchy -->
+    </bean>
+
+	<!-- Solr field value providers TEMPORARY FOR NOW SO DO NOT NEED TO DEPEND ON yb2bacceleratorcore -->
+	
+			
+</beans>

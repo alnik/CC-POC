@@ -1,0 +1,54 @@
+# ImpEx for Importing Products price rows into Multicountry Product Catalog
+"#% impex.setLocale( Locale.GERMAN );"
+
+# Macros / Replacement Parameter definitions
+$productCatalog=apparelMultiCountryProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+
+# Create product price rows
+INSERT_UPDATE PriceRow;product(code,$catalogVersion)[unique=true];currency(isocode)[unique=true];price[numberformat=#.###,##];ug(code)[unique=true];$catalogVersion;unit(code)[default=pieces]
+;300441142;USD;13,11;pricegroup-us;
+;29531;USD;32,87;pricegroup-us;
+;29532;USD;32,87;pricegroup-us;
+;29533;USD;78,98;pricegroup-us;
+;30404;USD;105,33;pricegroup-us;
+;300047513;USD;105,33;pricegroup-us;
+;45572;USD;19,93;pricegroup-us;
+;45573;USD;47,36;pricegroup-us;
+;45574;USD;6,6;pricegroup-us;
+;45576;USD;19,93;pricegroup-us;
+;45577;USD;7,93;pricegroup-us;
+;300046592;USD;158,03;pricegroup-us;
+;300005449;USD;210,73;pricegroup-us;
+;300013358;USD;26,28;pricegroup-us;
+;300015407;USD;118,51;pricegroup-us;
+;300020294;USD;30,24;pricegroup-us;
+;300022348;USD;66,1;pricegroup-us;
+;300022349;USD;52,06;pricegroup-us;
+;300022352;USD;63,53;pricegroup-us;
+;300022356;USD;46,05;pricegroup-us;
+;300024964;USD;156,72;pricegroup-us;
+;300040462;USD;105,33;pricegroup-us;
+;300044323;USD;46,05;pricegroup-us;
+;300044596;USD;65,78;pricegroup-us;
+;300044599;USD;52,63;pricegroup-us;
+;300044600;USD;60,54;pricegroup-us;
+;300044601;USD;23,65;pricegroup-us;
+;300044617;USD;105,33;pricegroup-us;
+;300044623;USD;131,68;pricegroup-us;
+;300044624;USD;105,33;pricegroup-us;
+;300045375;USD;131,68;pricegroup-us;
+;300046522;USD;52,63;pricegroup-us;
+;300046587;USD;131,68;pricegroup-us;
+;300051511;USD;62,97;pricegroup-us;
+;300047195;USD;131,68;pricegroup-us;
+;300047196;USD;144,86;pricegroup-us;
+;300047199;USD;131,68;pricegroup-us;
+;300047436;USD;138,27;pricegroup-us;
+;300310070;USD;131,68;pricegroup-us;
+;300310086;USD;65,81;pricegroup-us;
+;300310163;USD;78,98;pricegroup-us;
+;300310180;USD;41,35;pricegroup-us;
+;300310300;USD;52,63;pricegroup-us;
+
+

@@ -1,0 +1,9 @@
+#
+# Import the CMS Site configuration for the German store
+#
+# ENGLISH LOCALIZATION
+#
+$lang=en
+ 
+UPDATE CMSSite;uid[unique=true];name[lang=$lang];locale[lang=$lang]
+;multicountry-de;"Apparel DE (MC)";en_gb

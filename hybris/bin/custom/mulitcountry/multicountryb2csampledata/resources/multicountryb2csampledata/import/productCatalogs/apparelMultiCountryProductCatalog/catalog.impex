@@ -1,0 +1,30 @@
+#
+# Create the Apparel Multi Country Product Catalog
+#
+$productCatalog=apparelMultiCountryProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged];
+$languages=de,fr,it,en,nl,es
+
+# Italy has a different category structure for display purposes
+$categoryCatalogIT=apparelMultiCountryCategoryCatalogIT
+
+# Product catalog
+INSERT_UPDATE Catalog;id[unique=true]
+;$productCatalog
+;$categoryCatalogIT
+
+# Product versions for product catalogs
+INSERT_UPDATE CatalogVersion;catalog(id)[unique=true];version[unique=true];active;languages(isoCode);writePrincipals(uid)
+;$productCatalog;Staged;false;$languages;employeegroup
+;$productCatalog;Online;true;$languages;employeegroup
+;$categoryCatalogIT;Staged;false;$languages;employeegroup
+;$categoryCatalogIT;Online;true;$languages;employeegroup
+
+# Create default tax row for all products in product catalog
+INSERT_UPDATE TaxRow;$catalogVersion;tax(code)[unique=true];pg(code)[unique=true];ug(code)[unique=true]
+;;de-vat-full;eu-vat-full;de-taxes
+;;de-vat-half;eu-vat-half;de-taxes
+;;uk-vat-full;eu-vat-full;uk-taxes
+;;uk-vat-half;eu-vat-half;uk-taxes
+;;us-sales-tax-full;eu-vat-full;us-taxes
+;;ca-sales-tax-full;eu-vat-full;ca-taxes

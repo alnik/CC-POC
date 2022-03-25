@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2012 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+
+  <import resource="multicountry-spring-as.xml"/>
+
+
+  <alias name="multicountryCategoryCatalogSelector" alias="categoryCatalogSelector"/>
+  <bean id="multicountryCategoryCatalogSelector"
+    class="de.hybris.platform.multicountry.strategies.impl.DefaultMulticountryCategoryCatalogSelector"/>
+
+  <alias alias="categoryService" name="defaultMulticountryCategoryService"/>
+  <bean id="defaultMulticountryCategoryService"
+    class="de.hybris.platform.multicountry.services.impl.DefaultMulticountryCategoryService"
+    parent="defaultCategoryService">
+    <property name="baseStoreService" ref="baseStoreService"/>
+    <property name="categoryCatalogSelector" ref="categoryCatalogSelector"/>
+  </bean>
+
+  <alias alias="productService" name="defaultMulticountryProductService"/>
+  <bean id="defaultMulticountryProductService"
+    class="de.hybris.platform.multicountry.services.impl.DefaultMulticountryProductService"
+    parent="defaultProductService">
+    <property name="baseStoreService" ref="baseStoreService"/>
+    <property name="categoryCatalogSelector" ref="categoryCatalogSelector"/>
+  </bean>
+
+  <!-- Don't override the alias "setupSyncJobService" with this one; it'll cause problems -->
+  <alias alias="setupSyncJobService" name="multicountrySetupSyncJobService"/>
+  <bean id="multicountrySetupSyncJobService" parent="defaultSetupSyncJobService">
+    <property name="productCatalogRootTypeCodes" ref="multicountryProductCatalogSyncRootTypeCodes"/>
+    <property name="productCatalogEditSyncDescriptors"
+      ref="multicountryProductCatalogEditSyncDescriptors"/>
+  </bean>
+
+  <bean name="mergeListFactoryBean"
+    class="de.hybris.platform.multicountry.util.spring.MergeListFactoryBean" abstract="true"/>
+  <bean name="mergeMapListFactoryBean"
+    class="de.hybris.platform.multicountry.util.spring.MergeMapListFactoryBean" abstract="true"/>
+
+
+  <alias alias="multicountryProductCatalogSyncRootTypeCodes"
+    name="defaultMulticountryProductCatalogSyncRootTypeCodes"/>
+  <bean id="defaultMulticountryProductCatalogSyncRootTypeCodes" parent="mergeListFactoryBean">
+    <property name="baseList" ref="productCatalogSyncRootTypeCodes"/>
+    <property name="additionalList">
+      <list value-type="java.lang.String">
+        <value>ProductAvailabilityAssignment</value>
+      </list>
+    </property>
+  </bean>
+
+  <alias alias="multicountryProductCatalogEditSyncDescriptors"
+    name="defaultMulticountryProductCatalogEditSyncDescriptors"/>
+  <bean id="defaultMulticountryProductCatalogEditSyncDescriptors" parent="mergeMapListFactoryBean">
+    <property name="baseMap" ref="productCatalogEditSyncDescriptors"/>
+    <property name="additionalMap">
+      <map key-type="java.lang.Class" value-type="java.util.List">
+        <entry key="de.hybris.platform.core.model.product.ProductModel">
+          <list>
+            <bean
+              class="de.hybris.platform.commerceservices.setup.data.EditSyncAttributeDescriptorData">
+              <property name="includeInSync" value="true"/>
+              <property name="copyByValue" value="true"/>
+              <property name="qualifier" value="availability"/>
+            </bean>
+          </list>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Import services and helper to override the importAll() implementation in AbstractDataImportService -->
+  <!--	<bean id="multicountrySystemSetupHelper"
+        class="de.hybris.platform.commerceservices.dataimport.MulticountryDataImportServiceHelper"
+        parent="abstractDataImportService"/>
+
+    <alias name="defaultMulticountryCoreDataImportService" alias="multicountryCoreDataImportService"/>
+    <bean id="defaultMulticountryCoreDataImportService"
+        class="de.hybris.platform.multicountry.dataimport.impl.MulticountryCoreDataImportService"
+        parent="coreDataImportService">
+      <property name="importServiceHelper" ref="multicountrySystemSetupHelper"/>
+      <property name="flexibleSearchService" ref="flexibleSearchService"/>
+      <property name="modelService" ref="modelService"/>
+      <property name="setupSyncJobService" ref="multicountrySetupSyncJobService"/>
+    </bean>
+    <alias name="defaultMulticountrySampleDataImportService" alias="multicountrySampleDataImportService"/>
+    <bean id="defaultMulticountrySampleDataImportService"
+        class="de.hybris.platform.multicountry.dataimport.impl.MulticountrySampleDataImportService"
+        parent="sampleDataImportService">
+      <property name="importServiceHelper" ref="multicountrySystemSetupHelper"/>
+    </bean>
+    <alias name="defaultMulticountryTestDataImportService" alias="multicountryTestDataImportService"/>
+    <bean id="defaultMulticountryTestDataImportService"
+        class="de.hybris.platform.multicountry.dataimport.impl.MulticountryTestDataImportService"
+        parent="abstractDataImportService">
+      <property name="importServiceHelper" ref="multicountrySystemSetupHelper"/>
+    </bean>
+  -->
+  <alias name="defaultActiveProductAvailabilityGroupsStrategy"
+    alias="activeProductAvailabilityGroupsStrategy"/>
+  <bean id="defaultActiveProductAvailabilityGroupsStrategy"
+    class="de.hybris.platform.multicountry.solr.search.strategies.impl.DefaultActiveProductAvailabilityGroupsStrategy">
+  </bean>
+
+  <bean parent="modifyPopulatorList">
+    <property name="list" ref="facetSearchQueryConverter"/>
+    <property name="add" ref="productAvailabilityGroupPopulator"/>
+  </bean>
+
+  <bean id="productAvailabilityGroupPopulator"
+    class="de.hybris.platform.multicountry.solr.search.populators.impl.ProductAvailabilityGroupPopulator">
+    <constructor-arg name="multicountryRestrictionService" ref="multicountryRestrictionService"/>
+  </bean>
+
+  <alias name="multiCountryStoreSessionFacade" alias="storeSessionFacade"/>
+  <bean id="multiCountryStoreSessionFacade" parent="defaultStoreSessionFacade"
+    class="de.hybris.platform.multicountry.facades.storesession.impl.MulticountryStoreSessionFacade"
+    scope="tenant">
+    <property name="multicountryRestrictionService" ref="multicountryRestrictionService"/>
+    <property name="categoryCatalogSelector" ref="multicountryCategoryCatalogSelector"/>
+    <property name="timeService" ref="timeService"/>
+  </bean>
+
+  <alias name="defaultMulticountryRestrictionService" alias="multicountryRestrictionService"/>
+  <bean id="defaultMulticountryRestrictionService"
+    class="de.hybris.platform.multicountry.services.impl.DefaultMulticountryRestrictionService">
+    <property name="searchRestrictionService" ref="searchRestrictionService"/>
+    <property name="sessionService" ref="sessionService"/>
+    <property name="typeDao" ref="typeDao"/>
+  </bean>
+
+  <bean id="solrIndexerJob"
+    class="de.hybris.platform.multicountry.solr.indexer.cron.impl.MulticountrySolrIndexerJob"
+    parent="abstractIndexerJob">
+    <property name="baseSiteService" ref="baseSiteService"/>
+    <property name="baseStoreService" ref="baseStoreService"/>
+    <property name="defaultSiteName" value="allBaseStoresSite"/>
+    <property name="multicountryRestrictionService" ref="multicountryRestrictionService"/>
+  </bean>
+
+  <bean id="solrIndexerHotUpdateJob"
+    class="de.hybris.platform.multicountry.solr.indexer.cron.impl.MulticountrySolrIndexerHotUpdateJob"
+    scope="tenant" parent="abstractIndexerJob">
+    <property name="baseSiteService" ref="baseSiteService"/>
+    <property name="baseStoreService" ref="baseStoreService"/>
+    <property name="defaultSiteName" value="allBaseStoresSite"/>
+    <property name="multicountryRestrictionService" ref="multicountryRestrictionService"/>
+  </bean>
+
+  <bean id="validateProductTaxRowDataInterceptor"
+    class="de.hybris.platform.multicountry.interceptors.ValidateProductTaxRowDataInterceptor">
+    <property name="sessionService" ref="sessionService"/>
+  </bean>
+
+  <bean id="validateProductTaxRowDataInterceptorMapping"
+    class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+    <property name="interceptor" ref="validateProductTaxRowDataInterceptor"/>
+    <property name="typeCode" value="Product"/>
+  </bean>
+
+  <bean id="apparelMultiCountryAllCategorySource" parent="abstractCategorySource"/>
+
+  <bean id="apparelMultiCountryCategorySource" parent="abstractCategorySource">
+    <property name="rootCategory" value="categories"/>
+    <!-- 'categories' is the root apparel category -->
+  </bean>
+  <bean id="apparelMultiCountryBrandCategorySource" parent="abstractCategorySource">
+    <property name="rootCategory" value="brands"/>
+    <!-- 'brands' is the root of the brands hierarchy -->
+  </bean>
+  <bean id="apparelMultiCountryCollectionCategorySource" parent="abstractCategorySource">
+    <property name="rootCategory"
+      value="collections"/> <!-- 'collections' is the root of the collections hierarchy -->
+  </bean>
+
+
+  <!-- Abstract category value resolver (retrieves one attribute from the categories of a product,
+  taking in consideration the category catalogs attached to the different CMS Sites -->
+  <bean id="abstractMultiCountryCategoryValueResolver" abstract="true"
+    class="de.hybris.platform.multicountry.solr.resolver.impl.MulticountryCategoryCodeValueResolver"
+    parent="abstractValueResolver">
+    <property name="modelService" ref="modelService"/>
+  </bean>
+
+  <!-- Category, Brand and Collection codes -->
+  <bean id="apparelMultiCountryAllCategoryCodeValueResolver"
+    parent="abstractMultiCountryCategoryValueResolver">
+    <property name="categorySource" ref="apparelMultiCountryAllCategorySource"/>
+    <property name="propertyName" value="code"/>
+  </bean>
+  <bean id="apparelMultiCountryCategoryPathValueResolver"
+    class="de.hybris.platform.multicountry.solr.resolver.impl.MulticountryCategoryPathValueResolver"
+    parent="abstractValueResolver">
+    <property name="categoryService" ref="categoryService"/>
+  </bean>
+  <bean id="apparelMultiCountryCategoryCodeValueResolver"
+    parent="abstractMultiCountryCategoryValueResolver">
+    <property name="categorySource" ref="apparelMultiCountryCategorySource"/>
+    <property name="propertyName" value="code"/>
+  </bean>
+  <bean id="apparelMultiCountryBrandCategoryCodeValueResolver"
+    parent="abstractMultiCountryCategoryValueResolver">
+    <property name="categorySource" ref="apparelMultiCountryBrandCategorySource"/>
+    <property name="propertyName" value="code"/>
+  </bean>
+  <bean id="apparelMultiCountryCollectionCategoryCodeValueResolver"
+    parent="abstractMultiCountryCategoryValueResolver">
+    <property name="categorySource" ref="apparelMultiCountryCollectionCategorySource"/>
+    <property name="propertyName" value="code"/>
+  </bean>
+
+  <!-- Category, Brand and Collection names -->
+  <bean id="apparelMultiCountryCategoryNameValueProvider"
+    parent="abstractCategoryNameValueProvider">
+    <property name="categorySource" ref="apparelMultiCountryCategorySource"/>
+  </bean>
+  <bean id="apparelMultiCountryBrandCategoryNameValueProvider"
+    parent="abstractCategoryNameValueProvider">
+    <property name="categorySource" ref="apparelMultiCountryBrandCategorySource"/>
+  </bean>
+  <bean id="apparelMultiCountryCollectionCategoryNameValueProvider"
+    parent="abstractCategoryNameValueProvider">
+    <property name="categorySource" ref="apparelMultiCountryCollectionCategorySource"/>
+  </bean>
+
+  <!--replace Customer Jalo class so we can use a time from the current time zone -->
+  <bean id="de.hybris.platform.jalo.user.Customer"
+    class="de.hybris.platform.multicountry.jalo.MulticountryCustomer" scope="prototype"/>
+
+  <alias name="multicountryFieldNameProvider" alias="solrFieldNameProvider"/>
+  <bean id="multicountryFieldNameProvider"
+    class="de.hybris.platform.multicountry.solr.provider.impl.MulticountryFieldNameProvider">
+    <property name="indexedPropertyConverter" ref="indexedPropertyConverter"/>
+    <property name="baseStoreService" ref="baseStoreService"/>
+    <property name="cmsSiteService" ref="cmsSiteService"/>
+  </bean>
+
+  <bean id="multicountryIndexOperationListener"
+    class="de.hybris.platform.multicountry.solrfacetsearch.indexer.listeners.MulticountryIndexOperationListener">
+    <property name="multicountryRestrictionService" ref="multicountryRestrictionService"/>
+  </bean>
+
+  <bean id="multicountryIndexOperationListenerDefinition" parent="solrListenerDefinition">
+    <property name="priority" value="1300"/>
+    <property name="listener" ref="multicountryIndexOperationListener"/>
+  </bean>
+
+  <bean parent="modifyPopulatorList">
+    <property name="list" ref="commerceIndexedPropertyConverter"/>
+    <property name="add" ref="categoryCatalogDependentPropertyPopulator"/>
+  </bean>
+
+  <bean id="categoryCatalogDependentPropertyPopulator"
+    class="de.hybris.platform.multicountry.solr.search.populators.impl.CategoryCatalogDependentPropertyPopulator"/>
+
+  <bean parent="modifyPopulatorList">
+    <property name="list" ref="facetSearchQueryConverter"/>
+    <property name="add" ref="dateFilterPopulator"/>
+  </bean>
+
+  <bean id="dateFilterPopulator"
+    class="de.hybris.platform.multicountry.solr.search.populators.impl.DateFilterPopulator">
+    <property name="multicountryRestrictionService" ref="multicountryRestrictionService"/>
+    <property name="timeService" ref="timeService"/>
+  </bean>
+
+  <bean id="upgProductPriceValueResolver"
+    class="de.hybris.platform.multicountry.solr.resolver.impl.UPGProductPriceValueResolver"
+    parent="abstractValueResolver">
+  </bean>
+
+  <bean id="productOnlineDateValueResolver"
+    class="de.hybris.platform.multicountry.solr.resolver.impl.OnlineDateValueResolver"
+    parent="abstractValueResolver">
+    <property name="activeProductAvailabilityGroupsStrategy"
+      ref="activeProductAvailabilityGroupsStrategy"/>
+  </bean>
+
+  <bean id="productOfflineDateValueResolver"
+    class="de.hybris.platform.multicountry.solr.resolver.impl.OfflineDateValueResolver"
+    parent="abstractValueResolver">
+    <property name="activeProductAvailabilityGroupsStrategy"
+      ref="activeProductAvailabilityGroupsStrategy"/>
+  </bean>
+
+  <bean id="productAvailabilityGroupValueResolver"
+    class="de.hybris.platform.multicountry.solr.resolver.impl.ProductAvailabilityGroupValueResolver"
+    parent="abstractValueResolver">
+    <property name="activeProductAvailabilityGroupsStrategy"
+      ref="activeProductAvailabilityGroupsStrategy"/>
+  </bean>
+
+  <bean id="unitNameResolver"
+        class="de.hybris.platform.multicountry.solr.resolver.impl.UnitNameResolver"
+        parent="abstractValueResolver" />
+
+  <bean id="collectionValueResolver"
+        class="de.hybris.platform.multicountry.solr.resolver.impl.CollectionValueResolver"
+        parent="abstractValueResolver">
+    <property name="modelService" ref="modelService"/>
+    <property name="qualifierProvider" ref="languageQualifierProvider"/>
+  </bean>
+
+  <alias name="multicountryCommerceCategoryService" alias="commerceCategoryService"/>
+  <bean id="multicountryCommerceCategoryService"
+    class="de.hybris.platform.multicountry.services.impl.DefaultMulticountryCommerceCategoryService"
+    parent="defaultCommerceCategoryService"/>
+
+  <alias name="multicountryIndexerWorker" alias="indexerWorker"/>
+  <bean id="multicountryIndexerWorker"
+    class="de.hybris.platform.multicountry.solr.indexer.workers.impl.MulticountryIndexerWorker"
+    scope="prototype" parent="defaultIndexerWorker">
+  </bean>
+
+  <alias name="multicountryIndexerStrategy" alias="indexerStrategy"/>
+  <bean id="multicountryIndexerStrategy"
+    class="de.hybris.platform.multicountry.solr.indexer.strategies.impl.MulticountryIndexerStrategy"
+    scope="prototype" parent="defaultIndexerStrategy">
+  </bean>
+
+  <!-- New Promotion Engine -->
+
+  <!-- RAO Converters, Populators, Extractors -->
+  <alias name="extendedCartRaoPopulator" alias="cartRaoPopulator"/>
+  <bean id="extendedCartRaoPopulator" parent="defaultCartRaoPopulator"
+    class="de.hybris.platform.multicountry.promotions.populators.ExtendedCartRaoPopulator">
+    <property name="baseStoreConverter" ref="baseStoreRaoConverter"/>
+  </bean>
+
+  <alias name="defaultBaseStoreRaoConverter" alias="baseStoreRaoConverter"/>
+  <bean id="defaultBaseStoreRaoConverter" parent="abstractPopulatingConverter">
+    <property name="targetClass"
+      value="de.hybris.platform.multicountry.promotions.rao.BaseStoreRAO"/>
+    <property name="populators">
+      <list>
+        <ref bean="baseStoreRaoPopulator"/>
+      </list>
+    </property>
+  </bean>
+
+  <alias name="defaultBaseStoreRaoPopulator" alias="baseStoreRaoPopulator"/>
+  <bean id="defaultBaseStoreRaoPopulator"
+    class="de.hybris.platform.multicountry.promotions.populators.BaseStoreRaoPopulator"/>
+
+  <alias name="defaultBaseStoreRaoExtractor" alias="baseStoreRaoExtractor"/>
+  <bean id="defaultBaseStoreRaoExtractor"
+    class="de.hybris.platform.multicountry.promotions.providers.BaseStoreCartRaoExtractor"/>
+
+  <bean id="baseStoreCartRAOProviderExtractorsListMergeDirective"
+    depends-on="cartRAOProviderExtractors" parent="listMergeDirective">
+    <property name="add" ref="baseStoreRaoExtractor"/>
+  </bean>
+
+  <!-- Condition translators -->
+  <bean id="ruleBaseStoreConditionTranslator"
+    class="de.hybris.platform.multicountry.promotions.translators.RuleBaseStoreConditionTranslator"/>
+  <bean id="ruleLocalTimeConditionTranslator"
+    class="de.hybris.platform.multicountry.promotions.translators.RuleLocalTimeConditionTranslator"/>
+
+  <!-- Parameter value mappers -->
+  <bean id="baseStoreRuleParameterValueMapper"
+    class="de.hybris.platform.multicountry.promotions.mappers.BaseStoreRuleParameterValueMapper">
+    <property name="baseStoreService" ref="baseStoreService"/>
+  </bean>
+
+  <bean id="baseStoreRuleParameterValueMapperDefinition"
+    class="de.hybris.platform.ruleengineservices.rule.strategies.impl.RuleParameterValueTypeDefinition">
+    <property name="mapper" ref="baseStoreRuleParameterValueMapper"/>
+    <property name="type" value="ItemType(BaseStore)"/>
+  </bean>
+
+  <!-- from multicountrycommons -->
+
+  <bean id="baseStoreTimeRestrictionDescriptionHandler"
+    class="de.hybris.platform.multicountry.model.BaseStoreTimeRestrictionDescriptionHandler"/>
+
+  <alias alias="cmsTimeRestrictionEvaluator" name="multicountryTimeRestrictionEvaluator"/>
+  <bean id="multicountryTimeRestrictionEvaluator"
+    class="de.hybris.platform.multicountry.restrictions.evaluator.impl.MulticountryCMSTimeRestrictionEvaluator">
+    <property name="sessionService" ref="sessionService"/>
+    <property name="timeService" ref="timeService"/>
+  </bean>
+
+  <bean id="cmsBaseStoreTimeRestrictionEvaluator"
+    class="de.hybris.platform.multicountry.restrictions.evaluator.impl.MulticountryCMSBaseStoreTimeRestrictionEvaluator">
+    <property name="cmsTimeRestrictionEvaluator" ref="cmsTimeRestrictionEvaluator"/>
+    <property name="baseStoreService" ref="baseStoreService"/>
+  </bean>
+
+  <bean id="cmsBaseStoreTimeRestrictionEvaluatorMapping"
+    class="de.hybris.platform.cms2.servicelayer.services.evaluator.CMSRestrictionEvaluatorMapping">
+    <property name="restrictionTypeCode" value="CMSBaseStoreTimeRestriction"/>
+    <property name="restrictionEvaluator" ref="cmsBaseStoreTimeRestrictionEvaluator"/>
+  </bean>
+
+
+  <!-- Interceptor -->
+  <bean id="mcPriceRowInterceptor"
+    class="de.hybris.platform.multicountry.model.interceptor.McPriceRowInterceptor">
+    <property name="productDao" ref="productDao"/>
+  </bean>
+
+  <bean id="mcPriceRowInterceptorMapping"
+    class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+    <property name="interceptor" ref="mcPriceRowInterceptor"/>
+    <property name="typeCode" value="PriceRow"/>
+  </bean>
+
+
+  <bean id="mcProductAvailabilityAssignmentInterceptor"
+    class="de.hybris.platform.multicountry.model.interceptor.McProductAvailabilityAssignmentInterceptor"/>
+
+  <bean id="mcProductAvailabilityAssignmentInterceptorMapping"
+    class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+    <property name="interceptor" ref="mcProductAvailabilityAssignmentInterceptor"/>
+    <property name="typeCode" value="ProductAvailabilityAssignment"/>
+  </bean>
+
+
+  <bean id="mcProductInterceptor"
+    class="de.hybris.platform.multicountry.model.interceptor.McProductInterceptor"/>
+
+  <bean id="mcProductInterceptorMapping"
+    class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+    <property name="interceptor" ref="mcProductInterceptor"/>
+    <property name="typeCode" value="Product"/>
+  </bean>
+
+
+  <alias name="multicountryProductLockingService" alias="productLockingService"/>
+  <bean id="multicountryProductLockingService" class="de.hybris.platform.multicountry.services.impl.DefaultMulticountryProductLockingService"/>
+</beans>

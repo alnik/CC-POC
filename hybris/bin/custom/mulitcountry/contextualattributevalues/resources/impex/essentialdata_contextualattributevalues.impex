@@ -1,0 +1,6 @@
+$START_USERRIGHTS       ; ; ; ; ; ; ; ; ;
+Type      ; UID                 ; MemberOfGroups ; Password ; Target                      ; read ; change ; create ; remove
+UserGroup ; productmanagergroup ;                ;          ;                             ;      ;        ;        ;   ;
+          ;                     ;                ;          ; ContextualAttributeValue    ; +    ; +      ; +      ; + ;
+          ;                     ;                ;          ; ContextualAttributesContext ; +    ; -      ; -      ; - ;
+$END_USERRIGHTS         ; ; ; ; ; ; ; ; ;

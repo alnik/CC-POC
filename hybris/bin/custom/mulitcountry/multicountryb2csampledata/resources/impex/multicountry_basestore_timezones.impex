@@ -1,0 +1,12 @@
+# Assign timezones
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];timezone(code)
+;multicountry-it;CET;
+;multicountry-fr;CET;
+;multicountry-uk;Europe/London;
+;multicountry-es;CET;
+;multicountry-de;CET;
+;multicountry-be;CET;
+
+

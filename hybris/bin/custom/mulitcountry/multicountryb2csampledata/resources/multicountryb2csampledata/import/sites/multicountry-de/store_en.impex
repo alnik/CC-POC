@@ -1,0 +1,12 @@
+#
+# Import the Apparel MultiCountry Germany BaseStore
+#
+# ENGLISH LOCALIZATION
+#
+ 
+$lang=en
+ 
+$storeUid=multicountry-de
+ 
+UPDATE BaseStore;uid[unique=true];name[lang=$lang]
+;$storeUid;"Apparel MultiCountry Germany"

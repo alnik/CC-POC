@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	
+	<alias name="defaultContextualAttributesDao" alias="contextualAttributesDao"/>		
+	<bean id="defaultContextualAttributesDao" class="de.hybris.platform.contextualattributevalues.daos.impl.DefaultContextualAttributesDao"
+		parent="abstractItemDao"/>
+		
+	<alias name="contextualSolrIndexConfigPopulator" alias="solrIndexConfigPopulator" />
+	<bean id="contextualSolrIndexConfigPopulator" class="de.hybris.platform.contextualattributevalues.converters.populator.ContextualIndexConfigPopulator" parent="defaultSolrIndexConfigPopulator">
+	</bean>
+	
+	<alias name="contextualSolrIndexedPopulator" alias="indexedPropertyPopulator" />
+	<bean id="contextualSolrIndexedPopulator" class="de.hybris.platform.contextualattributevalues.converters.populator.ContextualSolrIndexedPopulator" parent="defaultIndexedPropertyPopulator">
+	</bean>		
+	
+	<alias name="defaultLegacyValueProvider" alias="modelPropertyFieldValueProvider" />
+	<bean id="defaultLegacyValueProvider" class="de.hybris.platform.contextualattributevalues.provider.impl.DefaultLegacyValueProvider" parent="abstractPropertyFieldValueProvider">
+		<property name="variantsService" ref="variantsService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+	
+	<alias name="contextualAttributeValuesStoreSessionFacade" alias="storeSessionFacade" />
+	<bean id="contextualAttributeValuesStoreSessionFacade" parent="multiCountryStoreSessionFacade"
+		class="de.hybris.platform.contextualattributevalues.facades.storesession.impl.ContextualAttributeValuesStoreSessionFacade">
+		<property name="contextualAttributeValuesSessionService" ref="contextualAttributeValuesSessionService"/>
+	</bean>
+		
+	<bean id="contextualAttributeValuesSessionService" parent="abstractBusinessService"
+		class="de.hybris.platform.contextualattributevalues.services.impl.DefaultContextualAttributeValuesSessionService"/>
+	
+	<alias name="contextualValueFieldNameProvider" alias="solrFieldNameProvider" />
+	<bean id="contextualValueFieldNameProvider" parent="multicountryFieldNameProvider"
+		  class="de.hybris.platform.contextualattributevalues.provider.impl.ContextualValueFieldNameProvider"/>
+	
+	<bean id="baseProductPopulator" class="de.hybris.platform.commercefacades.product.converters.populator.AbstractProductPopulator">
+    	<replaced-method name="getProductAttribute" replacer="replacementGetProductAttribute">
+        	<arg-type>de.hybris.platform.core.model.product.ProductModel</arg-type>
+        	<arg-type>String</arg-type>
+    	</replaced-method>
+    	<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<bean id="replacementGetProductAttribute" parent="abstractContextualGetProductAttribute"
+			class="de.hybris.platform.contextualattributevalues.converters.populator.ReplacementGetProductAttributeMethodPopulator">
+	</bean>
+	
+	<bean id="abstractContextualGetProductAttribute" scope="prototype" abstract="true"
+			class="de.hybris.platform.contextualattributevalues.converters.populator.AbstractContextualGetProductAttribute">
+		<property name="contextualAttributeValuesSessionService" ref="contextualAttributeValuesSessionService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="typeService" ref="typeService"/>
+	</bean>
+	
+	<alias name="contextualProductUrlPopulator" alias="productUrlPopulator"/>
+	<bean id="contextualProductUrlPopulator" class="de.hybris.platform.contextualattributevalues.converters.populator.ContextualProductUrlPopulator">
+		<property name="productModelUrlResolver" ref="productModelUrlResolver"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="typeService" ref="typeService"/>
+		<property name="contextualAttributeValuesSessionService" ref="contextualAttributeValuesSessionService"/>
+	</bean>
+	
+	<alias name="contextualSpringELValueProvider" alias="springELValueProvider"/>
+	<bean id="contextualSpringELValueProvider" class="de.hybris.platform.contextualattributevalues.provider.impl.ContextualSpELValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="parser">
+			<bean class="org.springframework.expression.spel.standard.SpelExpressionParser" />
+		</property>
+		<property name="modelService" ref="modelService"/>
+		<property name="i18NService" ref="i18NService"/>
+		<property name="typeService" ref="typeService"/>
+	</bean>
+	
+	<!-- System Setup -->
+	<bean id="contextualAttributeValuesSystemSetup"
+		class="de.hybris.platform.contextualattributevalues.setup.SampleDataSystemSetup"
+		parent="abstractCoreSystemSetup" />
+		
+	<!-- Multicountry setup  -->
+
+	<!-- Extend the multi-country sync job definition with additional attributes -->
+	<alias alias="multicountryProductCatalogSyncRootTypeCodes" name="defaultContextualAttributesProductCatalogSyncRootTypeCodes"/>
+	<alias alias="multicountryProductCatalogEditSyncDescriptors" name="defaultContextualAttributesProductCatalogEditSyncDescriptors"/>
+	 
+	<bean id="defaultContextualAttributesProductCatalogSyncRootTypeCodes" parent="mergeListFactoryBean">
+		<property name="baseList" ref="defaultMulticountryProductCatalogSyncRootTypeCodes"/>
+		<property name="additionalList">
+			<list value-type="java.lang.String">
+				<value>ContextualAttributeValue</value>
+			</list>
+		</property>
+	</bean>
+ 
+	<bean id="defaultContextualAttributesProductCatalogEditSyncDescriptors" parent="mergeMapListFactoryBean">
+		<property name="baseMap" ref="defaultMulticountryProductCatalogEditSyncDescriptors"/>
+		<property name="additionalMap">
+			<map key-type="java.lang.Class" value-type="java.util.List">				
+				<entry key="de.hybris.platform.core.model.product.ProductModel">
+					<list>
+						<bean class="de.hybris.platform.commerceservices.setup.data.EditSyncAttributeDescriptorData">
+							<property name="includeInSync" value="true"/>
+							<property name="copyByValue" value="true"/>
+							<property name="qualifier" value="contextualAttributeValues"/>
+						</bean>
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="mcContextualAttributeValuInterceptor" class="de.hybris.platform.contextualattributevalues.interceptor.McContextualAttributeValuInterceptor"/>
+ 	
+ 	<bean id="mcContextualAttributeValuInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="mcContextualAttributeValuInterceptor" />
+		<property name="typeCode" value="ContextualAttributeValue" />
+	</bean>
+	
+</beans>

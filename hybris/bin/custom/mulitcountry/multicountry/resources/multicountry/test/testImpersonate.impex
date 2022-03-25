@@ -1,0 +1,42 @@
+$productCatalog=ATestCatalog
+$catalogVersion=catalogVersion(catalog(id[default='$productCatalog']),version[default='ATestVersion'])[unique=true,default='$productCatalog:ATestVersion']
+$supercategories=supercategories( code, catalogVersion(catalog(id[default='$productCatalog']),version[default='ATestVersion']))
+$baseProduct=baseProduct(code, catalogVersion(catalog(id[default='$productCatalog']),version[default='ATestVersion']))
+$approved=approvalstatus(code)[default='approved']
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+INSERT_UPDATE UserGroup;uid[unique=true];locname[lang=en];
+;productmanager;productmanager;productmanager;
+
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode);sessionCurrency(isocode)
+;productmanager-test;;Test Product manager;Test Product Manager;productmanager;;
+
+
+INSERT_UPDATE Catalog;id[unique=true]
+                     ;ATestCatalog
+ 
+INSERT_UPDATE CatalogVersion;version[unique=true];catalog(id)[default=$productCatalog];active
+                            ;ATestVersion       ;;true
+
+
+INSERT_UPDATE Language;isocode[unique=true];active
+;de;true
+;en;true
+
+INSERT_UPDATE Currency;isocode[unique=true];name[lang=de];name[lang=en];active;base;conversion;digits;symbol
+;EUR;Euro;Euro;true;true;1;2;€
+
+
+INSERT_UPDATE PromotionGroup ; Identifier[unique=true]  ;                              ;                                          ;                          ;                           ;                                ;                          ;                          ;                          ; 
+                             ; default                  ;                              ;                                          ;                          ;                           ;                                ;                          ;                          ;                          ; 
+
+INSERT_UPDATE BaseStore      ; uid[unique=true]         ; catalogs(id)                 ; currencies(isocode)                      ; net                      ; taxGroup(code)            ; storelocatorDistanceUnit(code) ; defaultCurrency(isocode) ; languages(isocode)       ; defaultLanguage(isocode) ; deliveryCountries(isocode) ; solrFacetSearchConfiguration(name) ; submitOrderProcessCode ; paymentProvider ;checkoutFlowGroup
+                             ; testStore                ; ATestCatalog                  ; EUR                         ; false                    ;                           ; km                             ; EUR         ; en         ; en         ;          ;                                    ;         ;           ;
+
+INSERT_UPDATE CMSSite        ; uid[unique=true]         ; stores(uid)                  ; defaultPromotionGroup(Identifier)        ; channel(code)            ; urlEncodingAttributes     ; defaultCatalog(id)			  ; siteMapConfig(&siteMapConfigId)
+                             ; testCmsSite                 ; testStore                    ; default                                  ; B2C                      ; language                  ; ATestCatalog					  ; 
+
+    
+                        

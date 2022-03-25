@@ -1,0 +1,9 @@
+#
+# Import the CMS Site configuration for the Italian store
+#
+# ENGLISH LOCALIZATION
+#
+$lang=en
+ 
+UPDATE CMSSite;uid[unique=true];name[lang=$lang];locale[lang=$lang]
+;multicountry-it;"Apparel IT (MC)";en_gb
