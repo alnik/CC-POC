@@ -26,6 +26,18 @@
                 "persona": "production"
             },
             {
+                "location": "hybris/config/shop/dev.properties",
+                "persona": "development"
+            },
+            {
+                "location": "hybris/config/shop/stage.properties",
+                "persona": "staging"
+            },
+            {
+                "location": "hybris/config/shop/prod.properties",
+                "persona": "production"
+            },
+            {
                 "location": "hybris/config/environments/common.properties"
              },
              {
