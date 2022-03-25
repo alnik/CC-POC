@@ -1,0 +1,4 @@
+[submodule "core-customize"]
+	path = core-customize
+	url = git@github.com:alnik/CC-POC.git
+	branch = AT-CORE
