@@ -4,6 +4,7 @@
 /hybris/bin/**/gensrc/
 /hybris/data/
 /hybris/temp/
+/hybris/log/
 /hybris/bin/custom/**/classes/
 /hybris/bin/custom/mulitcountry/**/build.xml
 
@@ -12,5 +13,7 @@
 platformhome.properties
 *_bof.jar
 *-webtestclasses.xml
-/.idea/
 *.build.number
+/.idea/
+/idea-module-files/
+/hybris/config/hybris4intellij.properties
