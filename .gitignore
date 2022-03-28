@@ -13,3 +13,4 @@ platformhome.properties
 *_bof.jar
 *-webtestclasses.xml
 /.idea/
+*.build.number
