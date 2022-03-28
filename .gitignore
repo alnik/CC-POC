@@ -17,3 +17,13 @@ platformhome.properties
 /.idea/
 /idea-module-files/
 /hybris/config/hybris4intellij.properties
+
+### Gradle ###
+.gradle
+/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
