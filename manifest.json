@@ -14,15 +14,15 @@
     "useConfig": {
         "properties": [
             {
-                "location": "hybris/config/environments/local-dev.properties",
+                "location": "hybris/config/environments/dev.properties",
                 "persona": "development"
             },
             {
-                "location": "hybris/config/environments/local-stage.properties",
+                "location": "hybris/config/environments/stage.properties",
                 "persona": "staging"
             },
             {
-                "location": "hybris/config/environments/local-prod.properties",
+                "location": "hybris/config/environments/prod.properties",
                 "persona": "production"
             },
             {
