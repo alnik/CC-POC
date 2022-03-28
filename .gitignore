@@ -1,0 +1,15 @@
+/hybris/config/custom.properties
+/hybris/bin/platform/
+/hybris/bin/modules/
+/hybris/bin/**/gensrc/
+/hybris/data/
+/hybris/temp/
+/hybris/bin/custom/**/classes/
+/hybris/bin/custom/mulitcountry/**/build.xml
+
+*.xsd
+*-testclasses.xml
+platformhome.properties
+*_bof.jar
+*-webtestclasses.xml
+/.idea/
