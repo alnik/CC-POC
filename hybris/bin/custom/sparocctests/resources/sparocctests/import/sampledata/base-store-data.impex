@@ -11,5 +11,8 @@ $supercategories = supercategories(code, catalogversion(catalog(id[default=$cata
 INSERT_UPDATE UserPriceGroup; code[unique = true]; name[lang = $defaultLanguage];
                             ; pricegroup-de      ; Germany Price Group          ;
 
-INSERT_UPDATE BaseStore; uid[unique = true]; userPriceGroup(code);
-                       ; $storeUid         ; pricegroup-de
+INSERT_UPDATE UserDiscountGroup; code[unique = true]; name[lang = $defaultLanguage];
+                               ; discountgroup-de   ; Germany Discount Group       ;
+
+INSERT_UPDATE BaseStore; uid[unique = true]; userPriceGroup(code); userDiscountGroup(code)
+                       ; $storeUid         ; pricegroup-de       ; discountgroup-de
