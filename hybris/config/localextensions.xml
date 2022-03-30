@@ -177,6 +177,9 @@
 	<extension name='commerceorgsamplesaddon' />
 	<extension name='hybrisanalyticsaddon' />
 
+    <!-- Custom Extensions -->
+    <extension name='sparocctests' />
+
 <!-- Sample Extensions -->
     <extension name='spartacussampledata' />
 <!--<extension name='kiwi' />
