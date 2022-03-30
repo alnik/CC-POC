@@ -11,7 +11,7 @@ import static org.apache.http.HttpStatus.SC_OK
 @ManualTest
 class SparProductsStockTest extends AbstractSpockFlowTest {
 
-	def "Get total number of product's stock levels : #format"() {
+	def "Get total number of product's stock levels: #format"() {
 
 		when: "user search for product's stock levels"
 		HttpResponseDecorator response = restClient.get(

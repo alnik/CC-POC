@@ -13,7 +13,7 @@ import static org.apache.http.HttpStatus.SC_OK
 @Unroll
 class SparCartFlowTest extends AbstractSpockFlowTest {
 
-    def "Cart flow: #format"() {
+    def "Place an order: #format"() {
         given: "a trusted client"
         authorizeTrustedClient(restClient)
 

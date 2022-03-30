@@ -26,7 +26,7 @@ class SparAllOCCSpockTests {
 	@AfterClass
 	static void tearDown() {
 		SparTestSetupUtils.stopServer()
-		//SparTestSetupUtils.cleanData()
+		SparTestSetupUtils.cleanData()
 	}
 
 	@Test

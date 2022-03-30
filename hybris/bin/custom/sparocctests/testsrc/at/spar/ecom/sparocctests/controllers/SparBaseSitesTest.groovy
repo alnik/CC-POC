@@ -13,6 +13,7 @@ import static org.apache.http.HttpStatus.SC_OK
 @ManualTest
 @Unroll
 class SparBaseSitesTest extends AbstractSpockFlowTest {
+
 	def "Client retrieves a base site: #format"() {
 		when:
 		HttpResponseDecorator response = restClient.get(path: getBasePath() + '/basesites', contentType: format) as HttpResponseDecorator
@@ -28,7 +29,7 @@ class SparBaseSitesTest extends AbstractSpockFlowTest {
 		format << [JSON]
 	}
 
-	def "Client retrieves countries for base sites"() {
+	def "Client retrieves countries for basesites"() {
 		when:
 		HttpResponseDecorator response = restClient.get(path: getBasePath() + '/basesites/countries') as HttpResponseDecorator
 
