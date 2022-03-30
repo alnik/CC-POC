@@ -23,7 +23,7 @@ $indexCurrencies=USD
 INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);username;password;indexingUsername;indexingPassword
 ;$serverConfigName;standalone;solrclient;client123;solrindexingclient;indexingclient123
 
-INSERT_UPDATE SolrEndpointUrl;solrServerConfig(name)[unique=true];url[unique=true];master[unique=true,default=false]
+INSERT_UPDATE SolrEndpointUrl;solrServerConfig(name)[unique=true];url;master[unique=true,default=false]
 ;$serverConfigName;http://localhost:8983/solr;true
 
 # Create the solr indexer configuration
