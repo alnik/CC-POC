@@ -1,6 +1,6 @@
 package at.spar.ecom.sparocctests
 
-
+import at.spar.ecom.sparocctests.controllers.SparAddressTest
 import at.spar.ecom.sparocctests.controllers.SparCartFlowTest
 import at.spar.ecom.sparocctests.controllers.SparProductsStockTest
 import at.spar.ecom.sparocctests.controllers.SparBaseSitesTest
@@ -13,7 +13,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses([SparBaseSitesTest, SparCartFlowTest, SparProductsStockTest])
+@Suite.SuiteClasses([SparBaseSitesTest, SparCartFlowTest, SparProductsStockTest, SparAddressTest])
 @IntegrationTest
 class SparAllOCCSpockTests {
 
